@@ -34,7 +34,8 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * This function finds all the events by query string parameters
+     * This function finds all the events by query string parameters and transfer the
+     * data on the DTO. This is needed to reformat the mongoDB stored date in standard format.
      *
      * @param queryPropertiesDTO: All the query parameters is hold by this DTO
      * @return : List of events

@@ -10,6 +10,10 @@ import org.springframework.stereotype.Component;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ * This class maintains the state of the Scraper Data for the events collection.
+ */
+
 @Setter
 @Getter
 @Component

@@ -7,6 +7,10 @@ import org.springframework.stereotype.Component;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * This class is used to hold all the scrapers state and data.
+ */
+
 @Setter
 @Getter
 @Component

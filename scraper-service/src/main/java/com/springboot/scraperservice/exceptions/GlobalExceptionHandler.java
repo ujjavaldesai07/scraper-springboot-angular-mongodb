@@ -11,6 +11,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import javax.servlet.http.HttpServletRequest;
 import java.util.logging.Logger;
 
+/**
+ * Custom exception handlers to send the response to client upon error.
+ */
+
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private final static Logger LOGGER = Logger.getLogger(String.valueOf(GlobalExceptionHandler.class));

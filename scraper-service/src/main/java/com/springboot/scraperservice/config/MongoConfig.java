@@ -18,8 +18,10 @@ public class MongoConfig {
 
     @Bean
     public MongoClient mongo() {
+        // get the connection string from env var
         ConnectionString connectionString = new ConnectionString(System.getenv("MONGODB_URI"));
 
+        // build the settings
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
                 .applyConnectionString(connectionString)
                 .applyToConnectionPoolSettings(builder -> {
@@ -39,11 +41,14 @@ public class MongoConfig {
                 })
                 .build();
 
+        // create mongo client
         return MongoClients.create(mongoClientSettings);
     }
 
     @Bean
     public MongoTemplate mongoTemplate() throws Exception {
+
+        // generate MongoTemplate to use the mongoDB advanced APIs like upsert, insertAll etc.
         return new MongoTemplate(mongo(), System.getenv("DB_NAME"));
     }
 

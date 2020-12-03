@@ -1,46 +1,53 @@
 package com.springboot.scraperservice.webscraper;
 
 import com.springboot.scraperservice.constants.Constants;
-import com.springboot.scraperservice.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
+/**
+ * Entrypoint for scraping
+ */
+
 @Component
 public class ScraperEngine {
     private final static Logger LOGGER = Logger.getLogger(String.valueOf(ScraperEngine.class));
-    private final EventService eventService;
     private final ScraperFactory scraperFactory;
     private final ExecutorServiceWrapper executorServiceWrapper;
     private final ScraperDataDispatcher scraperDataDispatcher;
 
     @Autowired
-    public ScraperEngine(EventService eventService,
-                         ScraperFactory scraperFactory,
+    public ScraperEngine(ScraperFactory scraperFactory,
                          ExecutorServiceWrapper executorServiceWrapper,
                          ScraperDataDispatcher scraperDataDispatcher) {
-        this.eventService = eventService;
         this.scraperFactory = scraperFactory;
         this.executorServiceWrapper = executorServiceWrapper;
         this.scraperDataDispatcher = scraperDataDispatcher;
     }
 
+    /**
+     * Starts the ScraperEngine
+     */
     public void begin() {
+
+        // get the executor service
         ExecutorService executorService = executorServiceWrapper
                 .getNewFixedThreadPool(System.getenv("MAX_SCRAPER_THREAD_COUNT"));
 
-
-        // cleanup the db if we dont need to maintain the history.
-//         eventService.dropCollection(Constants.MONGO_EVENT_COLLECTION);
-
+        // iterate over the Scraper instances
         for (ScraperInfo scraperInfo : ScraperInfo.values()) {
+
+            // execute Scrapers concurrently.
             executorService.execute((Runnable) scraperFactory.createScraper(scraperInfo));
         }
+
+        // execute the dispatcher to dispatch the data provided by scraper to database.
         executorService.execute(scraperDataDispatcher);
 
-        executorServiceWrapper.prepareToShutDown(20, "SCRAPER_EXECUTOR_SERVICE");
+        // forced shutdown of the executor service if the processing is not finished within 20 seconds
+        executorServiceWrapper.forcedShutDown(20, Constants.SCRAPER_ENGINE_EXECUTOR_SERVICE);
 
     }
 }

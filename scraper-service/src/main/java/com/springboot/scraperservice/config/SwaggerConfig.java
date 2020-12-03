@@ -13,6 +13,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.ArrayList;
 
+/**
+ * Swagger is used to refer the APIs usage and test out the APIs.
+ */
+
 @Configuration
 @EnableSwagger2
 @Import(BeanValidatorPluginsConfiguration.class)
@@ -21,6 +25,8 @@ public class SwaggerConfig {
 
     @Bean
     public Docket api() {
+
+        // build the swagger settings.
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.springboot.scraperservice.controller"))

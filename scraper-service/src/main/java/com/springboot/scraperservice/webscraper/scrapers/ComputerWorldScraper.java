@@ -16,6 +16,11 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * This class scrapes the data from the website and add in the queue.
+ * It will also run on the separate thread other then the main thread.
+ */
+
 @Component
 public class ComputerWorldScraper implements Scraper, Runnable {
 
@@ -28,52 +33,82 @@ public class ComputerWorldScraper implements Scraper, Runnable {
                                 ScraperEventsState scraperEventsState) {
         this.scraperEventsState = scraperEventsState;
 
+        // register the state in scraperStateHolder
+        // and make the queue active to push data in the database.
         scraperEventsState.setIsActive(true);
         scraperStateHolder.registerEventsState(scraperEventsState);
     }
 
+    /**
+     * Processes and extract the document using CSS query selectors
+     *
+     * @param document: HTML document
+     */
     private void processDocument(Document document) {
-        LOGGER.log(Level.INFO, "Started Processing ComputerWorldScraper document..." + scraperEventsState.hashCode());
+        LOGGER.log(Level.INFO, "Started Processing ComputerWorldScraper document");
 
-        for (Element row : document.select("table.tablesorter tbody tr")) {
+        try {
+            // iterate over the document
+            for (Element row : document.select("table.tablesorter tbody tr")) {
 
-            String title = row.select("th").text();
-            String startDate = row.select("td:nth-of-type(2)").text();
-            String endDate = row.select("td:nth-of-type(3)").text();
-            String location = row.select("td:nth-of-type(4)").text();
+                // query selectors to scrape the data.
+                String title = row.select("th").text();
+                String startDate = row.select("td:nth-of-type(2)").text();
+                String endDate = row.select("td:nth-of-type(3)").text();
+                String location = row.select("td:nth-of-type(4)").text();
 
-            if (!title.equals("")) {
-                Events event = new Events();
-                event.setTitle(title);
-                event.setWebsite(ScraperInfo.COMPUTER_WORLD.NAME);
+                // check if title is available as this will unique and required parameter.
+                if (!title.equals("")) {
 
-                if (!location.isEmpty()) {
-                    event.setLocation(location);
+                    Events event = new Events();
+                    event.setTitle(title);
+                    event.setWebsite(ScraperInfo.COMPUTER_WORLD.NAME);
+
+                    // optional
+                    if (!location.isEmpty()) {
+                        event.setLocation(location);
+                    }
+
+                    // optional
+                    Date startDateWithYear = DateConversion.convertStrToDate(startDate, dateFormat);
+                    if (startDateWithYear != null) {
+                        event.setStartDate(startDateWithYear);
+                    }
+
+                    // optional
+                    Date endDateWithYear = DateConversion.convertStrToDate(endDate, dateFormat);
+                    if (endDateWithYear != null) {
+                        event.setEndDate(endDateWithYear);
+                    }
+
+                    // add event in the queue
+                    scraperEventsState.getEventsQueue().add(event);
                 }
-
-                Date startDateWithYear = DateConversion.convertStrToDate(startDate, dateFormat);
-                if (startDateWithYear != null) {
-                    event.setStartDate(startDateWithYear);
-                }
-
-                Date endDateWithYear = DateConversion.convertStrToDate(endDate, dateFormat);
-                if (endDateWithYear != null) {
-                    event.setEndDate(endDateWithYear);
-                }
-
-                scraperEventsState.getEventsQueue().add(event);
             }
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Error occurred while processing the document");
         }
-        LOGGER.log(Level.INFO, "Finished Processing ComputerWorldScraper document...");
+
+
+        // reset the status to false in order to release the ScraperDataDispatcher thread
+        // which is used to insert data in the database.
+        scraperEventsState.setIsActive(false);
+        LOGGER.log(Level.INFO, "Finished Processing ComputerWorldScraper document.");
     }
 
     @Override
     public void startScraper() {
 
         try {
+            // Jsoup is used to parse the HTML.
             final Document document = Jsoup.connect(ScraperInfo.COMPUTER_WORLD.URL).get();
+
+            // process document
             processDocument(document);
         } catch (Exception ex) {
+
+            // release the ScraperDataDispatcher thread if exception occurs.
+            scraperEventsState.setIsActive(false);
             ex.printStackTrace();
         }
     }

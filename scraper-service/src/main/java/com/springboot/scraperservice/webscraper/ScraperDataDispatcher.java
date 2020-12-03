@@ -1,5 +1,6 @@
 package com.springboot.scraperservice.webscraper;
 
+import com.springboot.scraperservice.constants.Constants;
 import com.springboot.scraperservice.model.Events;
 import com.springboot.scraperservice.service.ServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,28 +39,46 @@ public class ScraperDataDispatcher implements Runnable {
     }
 
     private void dispatchEventsData(List<ScraperEventsState> scraperEventsStates) {
-        LOGGER.log(Level.INFO, "Started dispatching events...");
-        for (ScraperEventsState scraperEventsState : scraperEventsStates) {
-            System.out.println("address = " + scraperEventsState.hashCode());
-            executorService.execute(() -> {
-                LOGGER.log(Level.INFO, "STARTED scraperEventsState = " + scraperEventsState.hashCode() + ", Size = " + scraperEventsState.getEventsQueue().size());
-                while (scraperEventsState.getIsActive() || scraperEventsState.getEventsQueue().size() > 0) {
-                    Events event = scraperEventsState.getEventsQueue().poll();
-                    if (event != null) {
-                        serviceProvider.getEventService().upsertEvent(event);
+        LOGGER.log(Level.INFO, "Started dispatching events");
+
+        try {
+            // iterate over all the queues and upsert the data concurrently into db.
+            for (ScraperEventsState scraperEventsState : scraperEventsStates) {
+
+                executorService.execute(() -> {
+                    // check if the document is still processing
+                    while (scraperEventsState.getIsActive() || scraperEventsState.getEventsQueue().size() > 0) {
+
+                        // grab the first event
+                        Events event = scraperEventsState.getEventsQueue().poll();
+
+                        // upsert the event
+                        if (event != null) {
+                            serviceProvider.getEventService().upsertEvent(event);
+                        }
                     }
-                }
-                LOGGER.log(Level.INFO, "DONE scraperEventsState = " + scraperEventsState.hashCode() + ", Size = " + scraperEventsState.getEventsQueue().size());
-            });
+                });
+
+            }
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Error occurred while dispatching events data to database");
         }
-        LOGGER.log(Level.INFO, "Finished dispatching events...");
+
+        LOGGER.log(Level.INFO, "Finished dispatching events");
     }
 
     private void startDispatch() {
-        LOGGER.log(Level.INFO, "Started dispatching...");
+        LOGGER.log(Level.INFO, "Started dispatching the data");
+
         dispatchEventsData(scraperStateHolder.getScraperEventsStateList());
-        executorServiceWrapper.prepareToShutDown(10, "SCRAPER_DISPATCHER_EXECUTOR_SERVICE");
+
+        // forced shutdown of the executor service if the processing is not finished within 10 seconds
+        executorServiceWrapper.forcedShutDown(10, Constants.SCRAPER_DISPATCHER_EXECUTOR_SERVICE);
+
+        // release all the memory from states and containers
         cleanup();
+
+        LOGGER.log(Level.INFO, "Finished dispatching the data");
     }
 
     /**

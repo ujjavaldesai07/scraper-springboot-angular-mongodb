@@ -8,6 +8,10 @@ import org.springframework.stereotype.Component;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * This class use to create object based on the Scraper Info.
+ */
+
 @Component
 public class ScraperFactory {
     private final static Logger LOGGER = Logger.getLogger(String.valueOf(ScraperFactory.class));

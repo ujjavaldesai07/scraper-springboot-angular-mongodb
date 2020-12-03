@@ -1,5 +1,9 @@
 package com.springboot.scraperservice.webscraper;
 
+/**
+ * Enum to maintain scrapper information and registered for scraping.
+ * Scraper Engine directly iterates over the values of this enum.
+ */
 public enum ScraperInfo {
     TECH_MEME("https://www.techmeme.com/events", "Techmeme"),
     COMPUTER_WORLD(
@@ -7,6 +11,8 @@ public enum ScraperInfo {
             , "ComputerWorld");
 
     public final String URL;
+
+    // website name
     public final String NAME;
 
     ScraperInfo(String URL, String NAME) {
