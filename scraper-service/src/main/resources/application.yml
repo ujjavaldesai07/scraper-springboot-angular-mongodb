@@ -1,0 +1,11 @@
+spring:
+  profiles:
+      active: ${ACTIVE_PROFILE}
+
+  application:
+    name: scraper-service
+
+  data:
+    mongodb:
+      repositories:
+        type: auto
