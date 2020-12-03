@@ -14,12 +14,12 @@ import java.util.Date;
 @Api(value = "Supports GET operation", tags = {"Event"})
 @RestController
 @RequestMapping(Routes.EVENT_API)
-public class EventController {
+public class EventsController {
 
     private final EventService eventService;
 
     @Autowired
-    public EventController(EventService eventService) {
+    public EventsController(EventService eventService) {
         this.eventService = eventService;
     }
 
@@ -37,14 +37,14 @@ public class EventController {
     @ApiOperation(value = "Get all events by filtering and sorting.",
             notes = "For filtering use query params as startDate, endDate," +
                     " location, title, website. For sorting use sort.")
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<?> getEvents(@RequestParam(required = false) String location,
                                        @RequestParam(required = false) String website,
                                        @RequestParam(required = false) Date startDate,
                                        @RequestParam(required = false) Date endDate,
                                        @RequestParam(required = false) String sort) {
 
-        // get all the query parameters
+        // set all the query parameters
         QueryPropertiesDTO queryPropertiesDTO = new QueryPropertiesDTO();
         queryPropertiesDTO.setLocation(location);
         queryPropertiesDTO.setWebsite(website);

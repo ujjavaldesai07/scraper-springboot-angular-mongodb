@@ -7,5 +7,4 @@ spring:
 
   data:
     mongodb:
-      repositories:
-        type: auto
+      auto-index-creation: true
