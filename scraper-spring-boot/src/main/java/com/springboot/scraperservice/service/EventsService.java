@@ -13,22 +13,21 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Service
-public class EventServiceImpl implements EventService {
-    private final static Logger LOGGER = Logger.getLogger(String.valueOf(EventServiceImpl.class));
+@org.springframework.stereotype.Service
+public class EventsService implements Service {
+    private final static Logger LOGGER = Logger.getLogger(String.valueOf(EventsService.class));
 
     private final MongoTemplate mongoTemplate;
     private final EventsRepository eventsRepository;
 
     @Autowired
-    public EventServiceImpl(MongoTemplate mongoTemplate, EventsRepository eventsRepository) {
+    public EventsService(MongoTemplate mongoTemplate, EventsRepository eventsRepository) {
         this.mongoTemplate = mongoTemplate;
         this.eventsRepository = eventsRepository;
     }
@@ -79,9 +78,18 @@ public class EventServiceImpl implements EventService {
     /**
      * This function update the event if found else adds new event in the collection.
      *
-     * @param event: Takes event object to add in the collection.
+     * @param data: Takes event object to add in the collection.
      */
-    public void upsertEvent(Events event) {
+    public void upsertData(Object data) {
+        Events event;
+
+        if (data instanceof Events) {
+            event = (Events) data;
+        } else {
+            LOGGER.log(Level.SEVERE,
+                    "Unable to cast to Events type. Reason: Wrong service is used for this object.");
+            return;
+        }
 
         // find the event by title which will be unique
         Query query = new Query();

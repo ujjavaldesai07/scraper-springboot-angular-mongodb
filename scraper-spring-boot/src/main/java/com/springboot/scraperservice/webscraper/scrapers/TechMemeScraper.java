@@ -2,9 +2,10 @@ package com.springboot.scraperservice.webscraper.scrapers;
 
 import com.springboot.scraperservice.helper.DateConversion;
 import com.springboot.scraperservice.model.Events;
+import com.springboot.scraperservice.service.ServiceProvider;
 import com.springboot.scraperservice.webscraper.Scraper;
-import com.springboot.scraperservice.webscraper.ScraperStateHolder;
-import com.springboot.scraperservice.webscraper.ScraperEventsState;
+import com.springboot.scraperservice.webscraper.ScraperStateManager;
+import com.springboot.scraperservice.webscraper.ScraperDataState;
 import com.springboot.scraperservice.webscraper.ScraperInfo;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,17 +25,20 @@ import java.util.logging.Logger;
 @Component
 public class TechMemeScraper implements Scraper, Runnable {
     private final static Logger LOGGER = Logger.getLogger(String.valueOf(TechMemeScraper.class));
-    private final ScraperEventsState scraperEventsState;
+    private final ScraperDataState<Events> scraperEventsDataState;
 
     @Autowired
-    public TechMemeScraper(ScraperStateHolder scraperStateHolder,
-                           ScraperEventsState scraperEventsState) {
-        this.scraperEventsState = scraperEventsState;
+    public TechMemeScraper(ScraperStateManager<Events> scraperStateManager,
+                           ScraperDataState<Events> scraperEventsDataState,
+                           ServiceProvider serviceProvider) {
+        this.scraperEventsDataState = scraperEventsDataState;
 
         // register the state in scraperStateHolder
         // and make the queue active to push data in the database.
-        scraperEventsState.setIsActive(true);
-        scraperStateHolder.registerEventsState(scraperEventsState);
+        scraperEventsDataState.setIsActive(true);
+        scraperEventsDataState.setService(serviceProvider.getEventsService());
+        scraperEventsDataState.setScraperId(ScraperInfo.TECH_MEME.ID);
+        scraperStateManager.registerScraperState(scraperEventsDataState);
     }
 
     /**
@@ -109,7 +113,7 @@ public class TechMemeScraper implements Scraper, Runnable {
      * @param document: HTML document
      */
     private void processDocument(Document document) {
-        LOGGER.log(Level.INFO, "Started Processing document" + scraperEventsState.hashCode());
+        LOGGER.log(Level.INFO, "Started Processing TechMeme document");
 
         try {
             // iterate over the document
@@ -136,7 +140,7 @@ public class TechMemeScraper implements Scraper, Runnable {
                     extractAndSetEventDates(dates, event);
 
                     // add event in the queue
-                    scraperEventsState.getEventsQueue().add(event);
+                    scraperEventsDataState.getDataQueue().add(event);
                 }
             }
         } catch (Exception ex) {
@@ -145,8 +149,9 @@ public class TechMemeScraper implements Scraper, Runnable {
 
         // reset the status to false in order to release the ScraperDataDispatcher thread
         // which is used to insert data in the database.
-        scraperEventsState.setIsActive(false);
-        LOGGER.log(Level.INFO, "Finished Processing document");
+        scraperEventsDataState.setIsActive(false);
+
+        LOGGER.log(Level.INFO, "Finished Processing TechMeme document");
     }
 
     @Override
@@ -161,7 +166,7 @@ public class TechMemeScraper implements Scraper, Runnable {
         } catch (Exception ex) {
 
             // release the ScraperDataDispatcher thread if exception occurs.
-            scraperEventsState.setIsActive(false);
+            scraperEventsDataState.setIsActive(false);
             ex.printStackTrace();
         }
     }

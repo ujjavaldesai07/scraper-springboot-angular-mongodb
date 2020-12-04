@@ -2,7 +2,7 @@ package com.springboot.scraperservice.controller;
 
 import com.springboot.scraperservice.constants.Routes;
 import com.springboot.scraperservice.dto.QueryPropertiesDTO;
-import com.springboot.scraperservice.service.EventService;
+import com.springboot.scraperservice.service.Service;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +16,11 @@ import java.util.Date;
 @RequestMapping(Routes.EVENT_API)
 public class EventsController {
 
-    private final EventService eventService;
+    private final Service service;
 
     @Autowired
-    public EventsController(EventService eventService) {
-        this.eventService = eventService;
+    public EventsController(Service service) {
+        this.service = service;
     }
 
     /**
@@ -52,7 +52,7 @@ public class EventsController {
         queryPropertiesDTO.setEndDate(endDate);
         queryPropertiesDTO.setSort(sort);
 
-        return ResponseEntity.ok(eventService.findAllEventsByProperties(queryPropertiesDTO));
+        return ResponseEntity.ok(service.findAllEventsByProperties(queryPropertiesDTO));
     }
 
 }

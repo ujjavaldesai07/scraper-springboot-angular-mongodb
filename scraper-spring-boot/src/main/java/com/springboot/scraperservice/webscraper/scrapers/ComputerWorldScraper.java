@@ -2,9 +2,10 @@ package com.springboot.scraperservice.webscraper.scrapers;
 
 import com.springboot.scraperservice.helper.DateConversion;
 import com.springboot.scraperservice.model.Events;
+import com.springboot.scraperservice.service.ServiceProvider;
 import com.springboot.scraperservice.webscraper.Scraper;
-import com.springboot.scraperservice.webscraper.ScraperStateHolder;
-import com.springboot.scraperservice.webscraper.ScraperEventsState;
+import com.springboot.scraperservice.webscraper.ScraperStateManager;
+import com.springboot.scraperservice.webscraper.ScraperDataState;
 import com.springboot.scraperservice.webscraper.ScraperInfo;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,17 +27,20 @@ public class ComputerWorldScraper implements Scraper, Runnable {
 
     private final static Logger LOGGER = Logger.getLogger(String.valueOf(ComputerWorldScraper.class));
     private final static String dateFormat = "yyyy-MM-dd";
-    private final ScraperEventsState scraperEventsState;
+    private final ScraperDataState<Events> scraperEventsDataState;
 
     @Autowired
-    public ComputerWorldScraper(ScraperStateHolder scraperStateHolder,
-                                ScraperEventsState scraperEventsState) {
-        this.scraperEventsState = scraperEventsState;
+    public ComputerWorldScraper(ScraperStateManager<Events> scraperStateManager,
+                                ScraperDataState<Events> scraperEventsDataState,
+                                ServiceProvider serviceProvider) {
+        this.scraperEventsDataState = scraperEventsDataState;
 
         // register the state in scraperStateHolder
         // and make the queue active to push data in the database.
-        scraperEventsState.setIsActive(true);
-        scraperStateHolder.registerEventsState(scraperEventsState);
+        scraperEventsDataState.setIsActive(true);
+        scraperEventsDataState.setService(serviceProvider.getEventsService());
+        scraperEventsDataState.setScraperId(ScraperInfo.COMPUTER_WORLD.ID);
+        scraperStateManager.registerScraperState(scraperEventsDataState);
     }
 
     /**
@@ -82,7 +86,7 @@ public class ComputerWorldScraper implements Scraper, Runnable {
                     }
 
                     // add event in the queue
-                    scraperEventsState.getEventsQueue().add(event);
+                    scraperEventsDataState.getDataQueue().add(event);
                 }
             }
         } catch (Exception ex) {
@@ -92,7 +96,7 @@ public class ComputerWorldScraper implements Scraper, Runnable {
 
         // reset the status to false in order to release the ScraperDataDispatcher thread
         // which is used to insert data in the database.
-        scraperEventsState.setIsActive(false);
+        scraperEventsDataState.setIsActive(false);
         LOGGER.log(Level.INFO, "Finished Processing ComputerWorldScraper document.");
     }
 
@@ -108,7 +112,7 @@ public class ComputerWorldScraper implements Scraper, Runnable {
         } catch (Exception ex) {
 
             // release the ScraperDataDispatcher thread if exception occurs.
-            scraperEventsState.setIsActive(false);
+            scraperEventsDataState.setIsActive(false);
             ex.printStackTrace();
         }
     }

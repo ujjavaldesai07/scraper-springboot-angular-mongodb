@@ -1,30 +1,26 @@
 package com.springboot.scraperservice.webscraper;
 
 import com.springboot.scraperservice.constants.Constants;
-import com.springboot.scraperservice.model.Events;
-import com.springboot.scraperservice.service.ServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Component
-public class ScraperDataDispatcher implements Runnable {
+public class ScraperDataDispatcher<T> implements Runnable {
     private final static Logger LOGGER = Logger.getLogger(String.valueOf(ScraperDataDispatcher.class));
-    private final ScraperStateHolder scraperStateHolder;
-    private final ServiceProvider serviceProvider;
+    private final ScraperStateManager<T> scraperStateManager;
     private final ExecutorServiceWrapper executorServiceWrapper;
     private ExecutorService executorService;
 
     @Autowired
-    public ScraperDataDispatcher(ScraperStateHolder scraperStateHolder,
-                                 ServiceProvider serviceProvider,
+    public ScraperDataDispatcher(ScraperStateManager<T> scraperStateManager,
                                  ExecutorServiceWrapper executorServiceWrapper) {
-        this.scraperStateHolder = scraperStateHolder;
-        this.serviceProvider = serviceProvider;
+        this.scraperStateManager = scraperStateManager;
         this.executorServiceWrapper = executorServiceWrapper;
 
         setExecutorService();
@@ -34,31 +30,32 @@ public class ScraperDataDispatcher implements Runnable {
         executorService = executorServiceWrapper.getCachedThreadPool();
     }
 
-    private void cleanup() {
-        scraperStateHolder.unregisterEventsStates();
-    }
-
-    private void dispatchEventsData(List<ScraperEventsState> scraperEventsStates) {
+    private void dispatchData() {
         LOGGER.log(Level.INFO, "Started dispatching events");
 
         try {
             // iterate over all the queues and upsert the data concurrently into db.
-            for (ScraperEventsState scraperEventsState : scraperEventsStates) {
+            for (Map.Entry<Integer, List<ScraperDataState<T>>> serviceDataStateEntry :
+                    scraperStateManager.getServiceDataStateMap().entrySet()) {
+                for (ScraperDataState<T> scraperDataState : serviceDataStateEntry.getValue()) {
 
-                executorService.execute(() -> {
-                    // check if the document is still processing
-                    while (scraperEventsState.getIsActive() || scraperEventsState.getEventsQueue().size() > 0) {
+                    executorService.execute(() -> {
+                        // check if the document is still processing
+                        while (scraperDataState.getIsActive() || scraperDataState.getDataQueue().size() > 0) {
 
-                        // grab the first event
-                        Events event = scraperEventsState.getEventsQueue().poll();
+                            // grab the first data
+                            T data = scraperDataState.getDataQueue().poll();
 
-                        // upsert the event
-                        if (event != null) {
-                            serviceProvider.getEventService().upsertEvent(event);
+                            // upsert the data
+                            if (data != null) {
+                                scraperDataState.getService().upsertData(data);
+                            }
                         }
-                    }
-                });
 
+                        // release the memory hold by the state and container
+                        scraperStateManager.unregisterScraperState(scraperDataState);
+                    });
+                }
             }
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Error occurred while dispatching events data to database");
@@ -70,13 +67,13 @@ public class ScraperDataDispatcher implements Runnable {
     private void startDispatch() {
         LOGGER.log(Level.INFO, "Started dispatching the data");
 
-        dispatchEventsData(scraperStateHolder.getScraperEventsStateList());
+        dispatchData();
 
         // forced shutdown of the executor service if the processing is not finished within 10 seconds
-        executorServiceWrapper.forcedShutDown(10, Constants.SCRAPER_DISPATCHER_EXECUTOR_SERVICE);
+        executorServiceWrapper.terminate(10, Constants.SCRAPER_DISPATCHER_EXECUTOR_SERVICE);
 
-        // release all the memory from states and containers
-        cleanup();
+        // tear down the map
+        scraperStateManager.destroyScraperStateMap();
 
         LOGGER.log(Level.INFO, "Finished dispatching the data");
     }

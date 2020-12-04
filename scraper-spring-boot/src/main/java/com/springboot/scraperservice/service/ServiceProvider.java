@@ -1,4 +1,5 @@
 package com.springboot.scraperservice.service;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,14 +11,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ServiceProvider {
-    private EventService eventService;
+    private EventsService eventsService;
 
     @Autowired
-    public void setEventService(EventService eventService) {
-        this.eventService = eventService;
+    public void setEventService(EventsService eventsService) {
+        this.eventsService = eventsService;
     }
 
-    public EventService getEventService() {
-        return this.eventService;
+    public EventsService getEventsService() {
+        return this.eventsService;
     }
 }

@@ -1,8 +1,10 @@
 package com.springboot.scraperservice.webscraper;
 
-import com.springboot.scraperservice.model.Events;
+import com.springboot.scraperservice.service.Service;
+import com.springboot.scraperservice.service.ServiceProvider;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -18,11 +20,13 @@ import java.util.Queue;
 @Getter
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ScraperEventsState {
-        private Boolean isActive;
-        private Queue<Events> eventsQueue;
+public class ScraperDataState<T> {
+    private Boolean isActive;
+    private Queue<T> dataQueue;
+    private Service service;
+    private Integer scraperId;
 
-        public ScraperEventsState() {
-                this.eventsQueue = new LinkedList<>();
-        }
+    public ScraperDataState() {
+        this.dataQueue = new LinkedList<>();
+    }
 }

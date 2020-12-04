@@ -47,7 +47,7 @@ public class ScraperEngine {
         executorService.execute(scraperDataDispatcher);
 
         // forced shutdown of the executor service if the processing is not finished within 20 seconds
-        executorServiceWrapper.forcedShutDown(20, Constants.SCRAPER_ENGINE_EXECUTOR_SERVICE);
+        executorServiceWrapper.terminate(20, Constants.SCRAPER_ENGINE_EXECUTOR_SERVICE);
 
     }
 }

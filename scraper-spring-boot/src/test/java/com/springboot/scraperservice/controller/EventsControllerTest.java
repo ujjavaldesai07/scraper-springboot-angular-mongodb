@@ -1,27 +1,18 @@
 package com.springboot.scraperservice.controller;
 
 import com.springboot.scraperservice.constants.Routes;
-import com.springboot.scraperservice.controller.EventsController;
 import com.springboot.scraperservice.dto.EventsDTO;
 import com.springboot.scraperservice.dto.QueryPropertiesDTO;
-import com.springboot.scraperservice.service.EventService;
-import com.springboot.scraperservice.service.EventServiceImpl;
+import com.springboot.scraperservice.service.Service;
 import org.junit.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -32,9 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.springboot.scraperservice.ScraperServiceApplication;
-import com.springboot.scraperservice.constants.Constants;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = EventsController.class)
@@ -47,7 +35,7 @@ public class EventsControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private EventService eventService;
+    private Service service;
 
     @Test
     public void getEvents() throws Exception {
@@ -71,7 +59,7 @@ public class EventsControllerTest {
         mockEventsDTOs.add(mockEventDTO);
 
         // when
-        Mockito.when(eventService.findAllEventsByProperties(queryPropertiesDTO)).thenReturn(mockEventsDTOs);
+        Mockito.when(service.findAllEventsByProperties(queryPropertiesDTO)).thenReturn(mockEventsDTOs);
 
         // prepare the request
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get(

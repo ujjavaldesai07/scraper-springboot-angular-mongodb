@@ -7,7 +7,7 @@ import com.springboot.scraperservice.model.Events;
 
 import java.util.List;
 
-public interface EventService {
+public interface Service {
 
     List<EventsDTO> findAllEventsByProperties(QueryPropertiesDTO queryPropertiesDTO);
 
@@ -15,5 +15,5 @@ public interface EventService {
 
     void insertEvents(List<Events> eventList);
 
-    void upsertEvent(Events event);
+    void upsertData(Object data);
 }

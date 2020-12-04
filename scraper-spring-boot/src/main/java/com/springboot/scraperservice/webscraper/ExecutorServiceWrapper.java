@@ -73,7 +73,7 @@ public class ExecutorServiceWrapper {
      * @param seconds: wait for number of given seconds and then terminate
      * @param executorServiceName: service name to check which if exceptions occurred.
      */
-    public void forcedShutDown(int seconds, String executorServiceName) {
+    public void terminate(int seconds, String executorServiceName) {
         try {
             if (getExecutorService().awaitTermination(seconds, TimeUnit.SECONDS)) {
                 LOGGER.log(Level.INFO, String.format("Task completed for executive service %s", executorServiceName));
