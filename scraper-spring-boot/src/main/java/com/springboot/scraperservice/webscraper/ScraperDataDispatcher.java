@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 /**
  * This class dispatches the data to database in concurrently and once it is done
  * all the memory will be cleared.
+ *
  * @param <T>
  */
 
@@ -20,14 +21,14 @@ import java.util.logging.Logger;
 public class ScraperDataDispatcher<T> implements Runnable {
     private final static Logger LOGGER = Logger.getLogger(String.valueOf(ScraperDataDispatcher.class));
     private final ScraperStateManager<T> scraperStateManager;
-    private final ExecutorServiceWrapper executorServiceWrapper;
+    private final ExecutorServiceManager executorServiceManager;
     private ExecutorService executorService;
 
     @Autowired
     public ScraperDataDispatcher(ScraperStateManager<T> scraperStateManager,
-                                 ExecutorServiceWrapper executorServiceWrapper) {
+                                 ExecutorServiceManager executorServiceManager) {
         this.scraperStateManager = scraperStateManager;
-        this.executorServiceWrapper = executorServiceWrapper;
+        this.executorServiceManager = executorServiceManager;
 
         setExecutorService();
     }
@@ -36,20 +37,24 @@ public class ScraperDataDispatcher<T> implements Runnable {
      * Gets the getCachedThreadPool to perform I/O operations.
      */
     private void setExecutorService() {
-        executorService = executorServiceWrapper.getCachedThreadPool();
+        executorService = executorServiceManager.getCachedThreadPool();
     }
 
     /**
      * Dispatches the data based on the collection object type
      */
     private void dispatchData() {
-        LOGGER.log(Level.INFO, "Started dispatching events");
+        LOGGER.log(Level.INFO, "Starting dispatching events");
 
         try {
             // iterate over all the queues and upsert the data concurrently into db.
             for (Map.Entry<Integer, List<ScraperDataState<T>>> serviceDataStateEntry :
                     scraperStateManager.getServiceDataStateMap().entrySet()) {
+
                 for (ScraperDataState<T> scraperDataState : serviceDataStateEntry.getValue()) {
+
+                    LOGGER.log(Level.INFO, String.format("Dispatching data to database for scrapper id = %d"
+                            , scraperDataState.getScraperId()));
 
                     executorService.execute(() -> {
                         // check if the document is still processing
@@ -68,7 +73,9 @@ public class ScraperDataDispatcher<T> implements Runnable {
                         scraperStateManager.unregisterScraperState(scraperDataState);
                     });
                 }
+
             }
+
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Error occurred while dispatching events data to database");
         }
@@ -82,7 +89,7 @@ public class ScraperDataDispatcher<T> implements Runnable {
         dispatchData();
 
         // forced shutdown of the executor service if the processing is not finished within 10 seconds
-        executorServiceWrapper.terminate(10, Constants.SCRAPER_DISPATCHER_EXECUTOR_SERVICE);
+        executorServiceManager.terminate(10, Constants.SCRAPER_DISPATCHER_EXECUTOR_SERVICE);
 
         // tear down the map as we are done now.
         scraperStateManager.destroyScraperStateMap();

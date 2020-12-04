@@ -16,15 +16,15 @@ import java.util.logging.Logger;
 public class ScraperEngine {
     private final static Logger LOGGER = Logger.getLogger(String.valueOf(ScraperEngine.class));
     private final ScraperFactory scraperFactory;
-    private final ExecutorServiceWrapper executorServiceWrapper;
+    private final ExecutorServiceManager executorServiceManager;
     private final ScraperDataDispatcher<Object> scraperDataDispatcher;
 
     @Autowired
     public ScraperEngine(ScraperFactory scraperFactory,
-                         ExecutorServiceWrapper executorServiceWrapper,
+                         ExecutorServiceManager executorServiceManager,
                          ScraperDataDispatcher<Object>  scraperDataDispatcher) {
         this.scraperFactory = scraperFactory;
-        this.executorServiceWrapper = executorServiceWrapper;
+        this.executorServiceManager = executorServiceManager;
         this.scraperDataDispatcher = scraperDataDispatcher;
     }
 
@@ -35,7 +35,7 @@ public class ScraperEngine {
         LOGGER.log(Level.INFO, "Starting the Scraper Engine.");
 
         // get the executor service
-        ExecutorService executorService = executorServiceWrapper
+        ExecutorService executorService = executorServiceManager
                 .getNewFixedThreadPool(System.getenv("MAX_SCRAPER_THREAD_COUNT"));
 
         // iterate over the Scraper instances
@@ -49,7 +49,7 @@ public class ScraperEngine {
         executorService.execute(scraperDataDispatcher);
 
         // forced shutdown of the executor service if the processing is not finished within 20 seconds
-        executorServiceWrapper.terminate(20, Constants.SCRAPER_ENGINE_EXECUTOR_SERVICE);
+        executorServiceManager.terminate(20, Constants.SCRAPER_ENGINE_EXECUTOR_SERVICE);
 
         LOGGER.log(Level.INFO, "Stopping the Scraper Engine.");
     }

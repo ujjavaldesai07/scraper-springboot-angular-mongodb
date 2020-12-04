@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Executor service wrapper is use to maintain the state, functionalities and handle exceptions.
+ * Executor service manager is use to manage the state, functionalities and handle exceptions.
  * This also need as the executor service is used twice i.e. in ScraperEngine and ScraperDataDispatcher.
  * This is prototype scope as it is used on two different places at the same time.
  *
@@ -21,8 +21,8 @@ import java.util.logging.Logger;
 @Setter
 @Getter
 @Component(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ExecutorServiceWrapper {
-    private final static Logger LOGGER = Logger.getLogger(String.valueOf(ExecutorServiceWrapper.class));
+public class ExecutorServiceManager {
+    private final static Logger LOGGER = Logger.getLogger(String.valueOf(ExecutorServiceManager.class));
     private ExecutorService executorService;
 
     /**
