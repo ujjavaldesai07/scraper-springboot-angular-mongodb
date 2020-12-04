@@ -15,6 +15,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * This class is implementing customized query as the parameters are dynamic.
+ */
+
 @Repository
 public class EventsRepositoryImpl {
     private final static Logger LOGGER = Logger.getLogger(String.valueOf(EventsRepositoryImpl.class));

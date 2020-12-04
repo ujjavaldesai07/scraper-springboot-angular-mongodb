@@ -6,6 +6,10 @@ import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 
+/**
+ * This class is send the error response in customized format.
+ */
+
 @Getter
 @Setter
 @ToString

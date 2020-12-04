@@ -7,6 +7,10 @@ import lombok.ToString;
 
 import java.util.Date;
 
+/**
+ * To take the query string parameters from URL.
+ */
+
 @Getter
 @Setter
 @NoArgsConstructor

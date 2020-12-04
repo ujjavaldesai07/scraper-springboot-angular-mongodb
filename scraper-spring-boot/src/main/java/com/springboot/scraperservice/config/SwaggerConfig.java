@@ -14,7 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.ArrayList;
 
 /**
- * Swagger is used to refer the APIs usage and test out the APIs.
+ * Swagger is used to refer the APIs usage and test out the APIs. Swagger must always run in dev env.
  */
 
 @Configuration

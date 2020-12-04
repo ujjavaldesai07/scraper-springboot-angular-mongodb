@@ -10,6 +10,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * This class dispatches the data to database in concurrently and once it is done
+ * all the memory will be cleared.
+ * @param <T>
+ */
+
 @Component
 public class ScraperDataDispatcher<T> implements Runnable {
     private final static Logger LOGGER = Logger.getLogger(String.valueOf(ScraperDataDispatcher.class));
@@ -26,10 +32,16 @@ public class ScraperDataDispatcher<T> implements Runnable {
         setExecutorService();
     }
 
+    /**
+     * Gets the getCachedThreadPool to perform I/O operations.
+     */
     private void setExecutorService() {
         executorService = executorServiceWrapper.getCachedThreadPool();
     }
 
+    /**
+     * Dispatches the data based on the collection object type
+     */
     private void dispatchData() {
         LOGGER.log(Level.INFO, "Started dispatching events");
 
@@ -48,7 +60,7 @@ public class ScraperDataDispatcher<T> implements Runnable {
 
                             // upsert the data
                             if (data != null) {
-                                scraperDataState.getService().upsertData(data);
+                                scraperDataState.getDataService().upsert(data);
                             }
                         }
 
@@ -72,7 +84,7 @@ public class ScraperDataDispatcher<T> implements Runnable {
         // forced shutdown of the executor service if the processing is not finished within 10 seconds
         executorServiceWrapper.terminate(10, Constants.SCRAPER_DISPATCHER_EXECUTOR_SERVICE);
 
-        // tear down the map
+        // tear down the map as we are done now.
         scraperStateManager.destroyScraperStateMap();
 
         LOGGER.log(Level.INFO, "Finished dispatching the data");

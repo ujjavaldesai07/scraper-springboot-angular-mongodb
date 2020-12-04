@@ -1,10 +1,8 @@
 package com.springboot.scraperservice.webscraper;
 
-import com.springboot.scraperservice.service.Service;
-import com.springboot.scraperservice.service.ServiceProvider;
+import com.springboot.scraperservice.service.DataService;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -13,7 +11,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * This class maintains the state of the Scraper Data for the events collection.
+ * This class maintains the state of the Scraper Data for any type of collection.
  */
 
 @Setter
@@ -23,7 +21,7 @@ import java.util.Queue;
 public class ScraperDataState<T> {
     private Boolean isActive;
     private Queue<T> dataQueue;
-    private Service service;
+    private DataService dataService;
     private Integer scraperId;
 
     public ScraperDataState() {

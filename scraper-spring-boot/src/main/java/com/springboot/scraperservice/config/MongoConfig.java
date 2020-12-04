@@ -19,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Configuration
-//@Profile({"prod", "dev"})
+//@Profile({"prod"})
 public class MongoConfig {
     private final static Logger LOGGER = Logger.getLogger(String.valueOf(MongoConfig.class));
     private MongoTemplate mongoTemplate;
@@ -62,12 +62,13 @@ public class MongoConfig {
     @Bean
     public MongoTemplate mongoTemplate() {
         try {
+
+            // generate MongoTemplate to use the mongoDB advanced APIs like upsert, insertAll etc.
             mongoTemplate = new MongoTemplate(mongoClient(), System.getenv("DB_NAME"));
 
             // adding indexing
             addASCIndexing(Constants.EVENTS_INDEX_ASC_ATTRIBUTES, Events.class);
 
-            // generate MongoTemplate to use the mongoDB advanced APIs like upsert, insertAll etc.
             return mongoTemplate;
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Unable to connect mongo template. Reason: " + ex);

@@ -2,7 +2,7 @@ package com.springboot.scraperservice.controller;
 
 import com.springboot.scraperservice.constants.Routes;
 import com.springboot.scraperservice.dto.QueryPropertiesDTO;
-import com.springboot.scraperservice.service.Service;
+import com.springboot.scraperservice.service.DataService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +16,11 @@ import java.util.Date;
 @RequestMapping(Routes.EVENT_API)
 public class EventsController {
 
-    private final Service service;
+    private final DataService dataService;
 
     @Autowired
-    public EventsController(Service service) {
-        this.service = service;
+    public EventsController(DataService dataService) {
+        this.dataService = dataService;
     }
 
     /**
@@ -44,6 +44,9 @@ public class EventsController {
                                        @RequestParam(required = false) Date endDate,
                                        @RequestParam(required = false) String sort) {
 
+        // I could have used here query map to take the parameters but
+        // I want spring to handle the parameters name and value types.
+
         // set all the query parameters
         QueryPropertiesDTO queryPropertiesDTO = new QueryPropertiesDTO();
         queryPropertiesDTO.setLocation(location);
@@ -52,7 +55,7 @@ public class EventsController {
         queryPropertiesDTO.setEndDate(endDate);
         queryPropertiesDTO.setSort(sort);
 
-        return ResponseEntity.ok(service.findAllEventsByProperties(queryPropertiesDTO));
+        return ResponseEntity.ok(dataService.findAllByProperties(queryPropertiesDTO));
     }
 
 }

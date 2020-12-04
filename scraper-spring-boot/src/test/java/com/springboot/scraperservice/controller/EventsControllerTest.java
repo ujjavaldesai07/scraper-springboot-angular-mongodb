@@ -3,7 +3,7 @@ package com.springboot.scraperservice.controller;
 import com.springboot.scraperservice.constants.Routes;
 import com.springboot.scraperservice.dto.EventsDTO;
 import com.springboot.scraperservice.dto.QueryPropertiesDTO;
-import com.springboot.scraperservice.service.Service;
+import com.springboot.scraperservice.service.DataService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -35,7 +35,7 @@ public class EventsControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private Service service;
+    private DataService dataService;
 
     @Test
     public void getEvents() throws Exception {
@@ -59,7 +59,7 @@ public class EventsControllerTest {
         mockEventsDTOs.add(mockEventDTO);
 
         // when
-        Mockito.when(service.findAllEventsByProperties(queryPropertiesDTO)).thenReturn(mockEventsDTOs);
+        Mockito.when(dataService.findAllByProperties(queryPropertiesDTO)).thenReturn(mockEventsDTOs);
 
         // prepare the request
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get(

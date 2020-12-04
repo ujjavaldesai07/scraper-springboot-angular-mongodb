@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.spring-boot</groupId>
-	<artifactId>scraper-service</artifactId>
+	<artifactId>scraper-dataService</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>scraper-service</name>
-	<description>Backend service for managing scraper data.</description>
+	<name>scraper-dataService</name>
+	<description>Backend dataService for managing scraper data.</description>
 
 	<properties>
 		<java.version>11</java.version>

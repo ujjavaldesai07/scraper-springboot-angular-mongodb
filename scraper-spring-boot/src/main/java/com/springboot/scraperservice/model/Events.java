@@ -7,6 +7,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
+/**
+ * Entity class to insert the document in the collection.
+ */
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,10 +20,8 @@ public class Events {
 
     private String title;
 
-    @Indexed(name = "location_index", unique = true)
     private String location;
 
-    @Indexed(name = "website_index")
     private String website;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

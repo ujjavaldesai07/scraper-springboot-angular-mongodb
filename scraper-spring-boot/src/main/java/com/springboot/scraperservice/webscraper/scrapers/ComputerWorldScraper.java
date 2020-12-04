@@ -35,10 +35,9 @@ public class ComputerWorldScraper implements Scraper, Runnable {
                                 ServiceProvider serviceProvider) {
         this.scraperEventsDataState = scraperEventsDataState;
 
-        // register the state in scraperStateHolder
-        // and make the queue active to push data in the database.
+        // register & initialize the the state in scraperStateHolder
         scraperEventsDataState.setIsActive(true);
-        scraperEventsDataState.setService(serviceProvider.getEventsService());
+        scraperEventsDataState.setDataService(serviceProvider.getEventsService());
         scraperEventsDataState.setScraperId(ScraperInfo.COMPUTER_WORLD.ID);
         scraperStateManager.registerScraperState(scraperEventsDataState);
     }

@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This class is used to hold all the scrapers state and data.
+ * This class is used to hold all the scrapers state and data of any type.
  */
 
 @Setter

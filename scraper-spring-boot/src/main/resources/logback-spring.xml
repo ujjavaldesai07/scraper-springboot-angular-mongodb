@@ -19,7 +19,7 @@
         <property name="LOGS" value="./logs"/>
         <appender name="RollingLoggerFile"
                   class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>${LOGS}/scraper-service-logger.log</file>
+            <file>${LOGS}/scraper-dataService-logger.log</file>
             <encoder
                     class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
                 <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
@@ -28,7 +28,7 @@
             <rollingPolicy
                     class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
                 <!-- rollover daily and when the file reaches 10 MegaBytes -->
-                <fileNamePattern>${LOGS}/archived/scraper-service-logger-%d{yyyy-MM-dd}.%i.log
+                <fileNamePattern>${LOGS}/archived/scraper-dataService-logger-%d{yyyy-MM-dd}.%i.log
                 </fileNamePattern>
                 <timeBasedFileNamingAndTriggeringPolicy
                         class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">

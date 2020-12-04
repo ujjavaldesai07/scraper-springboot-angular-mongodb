@@ -11,14 +11,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ServiceProvider {
-    private EventsService eventsService;
+    private EventsDataService eventsService;
 
     @Autowired
-    public void setEventService(EventsService eventsService) {
+    public void setEventService(EventsDataService eventsService) {
         this.eventsService = eventsService;
     }
 
-    public EventsService getEventsService() {
+    public EventsDataService getEventsService() {
         return this.eventsService;
     }
 }

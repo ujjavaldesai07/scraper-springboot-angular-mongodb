@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -16,12 +17,12 @@ public class ScraperEngine {
     private final static Logger LOGGER = Logger.getLogger(String.valueOf(ScraperEngine.class));
     private final ScraperFactory scraperFactory;
     private final ExecutorServiceWrapper executorServiceWrapper;
-    private final ScraperDataDispatcher scraperDataDispatcher;
+    private final ScraperDataDispatcher<Object> scraperDataDispatcher;
 
     @Autowired
     public ScraperEngine(ScraperFactory scraperFactory,
                          ExecutorServiceWrapper executorServiceWrapper,
-                         ScraperDataDispatcher scraperDataDispatcher) {
+                         ScraperDataDispatcher<Object>  scraperDataDispatcher) {
         this.scraperFactory = scraperFactory;
         this.executorServiceWrapper = executorServiceWrapper;
         this.scraperDataDispatcher = scraperDataDispatcher;
@@ -31,6 +32,7 @@ public class ScraperEngine {
      * Starts the ScraperEngine
      */
     public void begin() {
+        LOGGER.log(Level.INFO, "Starting the Scraper Engine.");
 
         // get the executor service
         ExecutorService executorService = executorServiceWrapper
@@ -49,5 +51,6 @@ public class ScraperEngine {
         // forced shutdown of the executor service if the processing is not finished within 20 seconds
         executorServiceWrapper.terminate(20, Constants.SCRAPER_ENGINE_EXECUTOR_SERVICE);
 
+        LOGGER.log(Level.INFO, "Stopping the Scraper Engine.");
     }
 }

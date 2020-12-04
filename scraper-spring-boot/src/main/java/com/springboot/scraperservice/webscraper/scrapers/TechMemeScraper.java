@@ -33,10 +33,9 @@ public class TechMemeScraper implements Scraper, Runnable {
                            ServiceProvider serviceProvider) {
         this.scraperEventsDataState = scraperEventsDataState;
 
-        // register the state in scraperStateHolder
-        // and make the queue active to push data in the database.
+        // register & initialize the the state in scraperStateHolder
         scraperEventsDataState.setIsActive(true);
-        scraperEventsDataState.setService(serviceProvider.getEventsService());
+        scraperEventsDataState.setDataService(serviceProvider.getEventsService());
         scraperEventsDataState.setScraperId(ScraperInfo.TECH_MEME.ID);
         scraperStateManager.registerScraperState(scraperEventsDataState);
     }
@@ -44,8 +43,8 @@ public class TechMemeScraper implements Scraper, Runnable {
     /**
      * Get the date by appending year based on the current month.
      *
-     * @param dateStr
-     * @return
+     * @param dateStr: date in string format
+     * @return : Date
      */
     private Date getDateWithYear(String dateStr) {
 
