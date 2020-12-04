@@ -35,10 +35,17 @@ public class ComputerWorldScraper implements Scraper, Runnable {
                                 ServiceProvider serviceProvider) {
         this.scraperEventsDataState = scraperEventsDataState;
 
-        // register & initialize the the state in scraperStateHolder
+        // initialize the the state in scraperStateHolder
         scraperEventsDataState.setIsActive(true);
-        scraperEventsDataState.setDataService(serviceProvider.getEventsService());
         scraperEventsDataState.setScraperId(ScraperInfo.COMPUTER_WORLD.ID);
+
+        // pass the database operation from which data service needs to get executed
+        // lambda fn is needed because right now I dont know on which index our state
+        // is getting registered by scraperStateManager. So manage iterate the list and
+        // call the function with appropriate data
+        scraperEventsDataState.setConsumer(t -> serviceProvider.getEventsService().upsert(t));
+
+        // register the the state in scraperStateHolder
         scraperStateManager.registerScraperState(scraperEventsDataState);
     }
 

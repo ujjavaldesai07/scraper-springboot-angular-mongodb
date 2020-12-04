@@ -34,10 +34,10 @@ public class ScraperDataDispatcher<T> implements Runnable {
     }
 
     /**
-     * Gets the getCachedThreadPool to perform I/O operations.
+     * Sets the getCachedThreadPool to perform I/O or database operations.
      */
     private void setExecutorService() {
-        executorService = executorServiceManager.getCachedThreadPool();
+        executorService = executorServiceManager.getCachedThreadPool(Constants.SCRAPER_DISPATCHER_EXECUTOR_SERVICE);
     }
 
     /**
@@ -56,6 +56,12 @@ public class ScraperDataDispatcher<T> implements Runnable {
                     LOGGER.log(Level.INFO, String.format("Dispatching data to database for scrapper id = %d"
                             , scraperDataState.getScraperId()));
 
+                    // check if we have got the consumer function or not.
+                    if (scraperDataState.getConsumer() == null) {
+                        throw new Exception("Dispatch failed due to unable find consumer for the scraper id = "
+                                + scraperDataState.getScraperId());
+                    }
+
                     executorService.execute(() -> {
                         // check if the document is still processing
                         while (scraperDataState.getIsActive() || scraperDataState.getDataQueue().size() > 0) {
@@ -65,7 +71,15 @@ public class ScraperDataDispatcher<T> implements Runnable {
 
                             // upsert the data
                             if (data != null) {
-                                scraperDataState.getDataService().upsert(data);
+                                try {
+                                    // if unable process consumer then break out of loop
+                                    scraperDataState.getConsumer().accept(data);
+                                } catch (Exception ex) {
+                                    LOGGER.log(Level.SEVERE, String.format(
+                                            "Unable to process the consumer for scraper id = %d",
+                                            scraperDataState.getScraperId()));
+                                    break;
+                                }
                             }
                         }
 
@@ -77,7 +91,8 @@ public class ScraperDataDispatcher<T> implements Runnable {
             }
 
         } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "Error occurred while dispatching events data to database");
+            LOGGER.log(Level.SEVERE, String.format(
+                    "Error occurred while dispatching events data to database. Reason: %s", ex));
         }
 
         LOGGER.log(Level.INFO, "Finished dispatching events");

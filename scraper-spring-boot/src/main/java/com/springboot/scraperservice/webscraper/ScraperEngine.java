@@ -22,7 +22,7 @@ public class ScraperEngine {
     @Autowired
     public ScraperEngine(ScraperFactory scraperFactory,
                          ExecutorServiceManager executorServiceManager,
-                         ScraperDataDispatcher<Object>  scraperDataDispatcher) {
+                         ScraperDataDispatcher<Object> scraperDataDispatcher) {
         this.scraperFactory = scraperFactory;
         this.executorServiceManager = executorServiceManager;
         this.scraperDataDispatcher = scraperDataDispatcher;
@@ -36,7 +36,8 @@ public class ScraperEngine {
 
         // get the executor service
         ExecutorService executorService = executorServiceManager
-                .getNewFixedThreadPool(System.getenv("MAX_SCRAPER_THREAD_COUNT"));
+                .getNewFixedThreadPool(System.getenv("MAX_SCRAPER_THREAD_COUNT"),
+                        Constants.SCRAPER_ENGINE_EXECUTOR_SERVICE);
 
         // iterate over the Scraper instances
         for (ScraperInfo scraperInfo : ScraperInfo.values()) {

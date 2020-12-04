@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * This class maintains the state of the Scraper Data for any type of collection.
@@ -21,8 +23,8 @@ import java.util.Queue;
 public class ScraperDataState<T> {
     private Boolean isActive;
     private Queue<T> dataQueue;
-    private DataService dataService;
     private Integer scraperId;
+    private Consumer<T> consumer;
 
     public ScraperDataState() {
         this.dataQueue = new LinkedList<>();

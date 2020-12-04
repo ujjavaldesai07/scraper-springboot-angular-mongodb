@@ -15,7 +15,6 @@ import java.util.logging.Logger;
  * Executor service manager is use to manage the state, functionalities and handle exceptions.
  * This also need as the executor service is used twice i.e. in ScraperEngine and ScraperDataDispatcher.
  * This is prototype scope as it is used on two different places at the same time.
- *
  */
 
 @Setter
@@ -27,10 +26,11 @@ public class ExecutorServiceManager {
 
     /**
      * This will be used for CPU bound operations
+     *
      * @param maxThreadCount: Max number of threads assigned to the pool.
      * @return
      */
-    public ExecutorService getNewFixedThreadPool(String maxThreadCount) {
+    public ExecutorService getNewFixedThreadPool(String maxThreadCount, String executorServiceName) {
         try {
             // start the executor service with MAX_SCRAPER_THREAD_COUNT
             executorService = Executors.newFixedThreadPool(Integer.parseInt(maxThreadCount));
@@ -40,12 +40,14 @@ public class ExecutorServiceManager {
         } catch (NumberFormatException ex) {
 
             LOGGER.log(Level.SEVERE,
-                    String.format("Provided MAX_SCRAPER_THREAD_COUNT [value=%s] is not an integer: %s ",
-                            System.getenv("MAX_SCRAPER_THREAD_COUNT"), ex));
+                    String.format("Provided maxThreadCount [value=%s] is not an integer: %s ",
+                            maxThreadCount, ex));
         } catch (Exception ex) {
 
             // catch any exceptions
-            LOGGER.log(Level.SEVERE, String.format("Failed to getNewFixedThreadPool executor service. Reason: %s", ex));
+            LOGGER.log(Level.SEVERE,
+                    String.format("Failed to get NewFixedThreadPool %s executor service. Reason: %s",
+                            executorServiceName, ex));
         }
         return null;
     }
@@ -53,9 +55,10 @@ public class ExecutorServiceManager {
     /**
      * This is cached pool used for IO bound operation, where we dont know
      * how many threads are needed.
+     *
      * @return
      */
-    public ExecutorService getCachedThreadPool() {
+    public ExecutorService getCachedThreadPool(String executorServiceName) {
         try {
             executorService = Executors.newCachedThreadPool();
             setExecutorService(executorService);
@@ -63,14 +66,17 @@ public class ExecutorServiceManager {
 
         } catch (Exception ex) {
 
-            LOGGER.log(Level.SEVERE, String.format("Failed to getCachedThreadPool executor service. Reason: %s", ex));
+            LOGGER.log(Level.SEVERE,
+                    String.format("Failed to get CachedThreadPool for %s executor service. Reason: %s",
+                            executorServiceName, ex));
         }
         return null;
     }
 
     /**
      * Shutdown the service after sometime as this will not get automatically terminated.
-     * @param seconds: wait for number of given seconds and then terminate
+     *
+     * @param seconds:             wait for number of given seconds and then terminate
      * @param executorServiceName: service name to check which if exceptions occurred.
      */
     public void terminate(int seconds, String executorServiceName) {
