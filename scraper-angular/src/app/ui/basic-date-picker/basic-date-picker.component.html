@@ -1,0 +1,6 @@
+<mat-form-field appearance="fill">
+  <mat-label>{{ "Choose a " + datePickerState.label }}</mat-label>
+  <input matInput [matDatepicker]="picker" readonly (dateChange)="onDateChange('change',$event)">
+  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+</mat-form-field>

@@ -9,4 +9,6 @@ public class Constants {
     public final static String SCRAPER_ENGINE_EXECUTOR_SERVICE = "SCRAPER_EXECUTOR_SERVICE";
 
     public final static String[] EVENTS_INDEX_ASC_ATTRIBUTES = {"startDate", "endDate"};
+
+    public final static String EVENTS_COLLECTIONS = "events";
 }

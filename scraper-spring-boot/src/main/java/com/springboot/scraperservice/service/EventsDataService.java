@@ -3,6 +3,7 @@ package com.springboot.scraperservice.service;
 import com.springboot.scraperservice.constants.Constants;
 import com.springboot.scraperservice.dto.EventsDTO;
 import com.springboot.scraperservice.dto.QueryPropertiesDTO;
+import com.springboot.scraperservice.exceptions.http.BadRequestException;
 import com.springboot.scraperservice.helper.DateConversion;
 import com.springboot.scraperservice.model.Events;
 import com.springboot.scraperservice.repository.EventsRepository;
@@ -71,7 +72,7 @@ public class EventsDataService implements DataService {
             event = (Events) data;
         } else {
             LOGGER.log(Level.SEVERE,
-                    "Unable to cast to Events type. Reason: Wrong service is used for this object.");
+                    "Unable to cast to Events type. Reason: Wrong service is used for this operation.");
             return;
         }
 
@@ -89,5 +90,18 @@ public class EventsDataService implements DataService {
 
         // execute the query
         mongoTemplate.upsert(query, update, Events.class);
+    }
+
+    public Object findByParameter(Object data) {
+
+        if (data instanceof QueryPropertiesDTO) {
+            return findAllByProperties((QueryPropertiesDTO) data);
+        } else if (data instanceof String) {
+            return eventsRepository.findDistinctByAttributes((String) data);
+        } else {
+            LOGGER.log(Level.SEVERE,
+                    "Unable to cast to supported types. Reason: Wrong service is used for this operation.");
+            throw new BadRequestException("Unsupported query parameters found.");
+        }
     }
 }

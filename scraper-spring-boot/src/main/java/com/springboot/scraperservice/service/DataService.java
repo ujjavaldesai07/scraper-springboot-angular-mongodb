@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface DataService {
 
-    List<EventsDTO> findAllByProperties(QueryPropertiesDTO queryPropertiesDTO);
-
     void upsert(Object data);
+
+    Object findByParameter(Object data);
 }

@@ -27,11 +27,11 @@ public class EventsController {
      * This function fetches the events based on the query parameters. If no parameter is
      * given then it will fetch all the events.
      *
-     * @param location: location of the event
-     * @param website: website name on which event is found
+     * @param location:  location of the event
+     * @param website:   website name on which event is found
      * @param startDate: start date of the event
-     * @param endDate: end date of the event
-     * @param sort: sort events as per location, website, startDate, endDate
+     * @param endDate:   end date of the event
+     * @param sort:      sort events as per location, website, startDate, endDate
      * @return : EventsDTO list
      */
     @ApiOperation(value = "Get all events by filtering and sorting.",
@@ -55,7 +55,18 @@ public class EventsController {
         queryPropertiesDTO.setEndDate(endDate);
         queryPropertiesDTO.setSort(sort);
 
-        return ResponseEntity.ok(dataService.findAllByProperties(queryPropertiesDTO));
+        return ResponseEntity.ok(dataService.findByParameter(queryPropertiesDTO));
+    }
+
+    /**
+     * This endpoint provides the data for filter supported options. i.e. distinct website names,locations etc.
+     *
+     * @return list of options
+     */
+    @ApiOperation(value = "Endpoint to provide data for the attributes such website names, locations etc.")
+    @GetMapping(value = Routes.EVENTS_FILTER_SORT_ATTRIBUTES_ENDPOINT)
+    public ResponseEntity<?> getWebsiteNames(@RequestParam(required = false) String attr) {
+        return ResponseEntity.ok(dataService.findByParameter(attr));
     }
 
 }

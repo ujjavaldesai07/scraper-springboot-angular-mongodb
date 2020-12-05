@@ -1,0 +1,14 @@
+table {
+  width:90vw;
+}
+
+.center-table {
+  display: flex;
+  justify-content: center;
+}
+
+.mat-header-cell {
+  font-size: 0.9rem;
+  background-color: black;
+  color: white;
+}

@@ -59,7 +59,7 @@ public class EventsControllerTest {
         mockEventsDTOs.add(mockEventDTO);
 
         // when
-        Mockito.when(dataService.findAllByProperties(queryPropertiesDTO)).thenReturn(mockEventsDTOs);
+        Mockito.when(dataService.findByParameter(queryPropertiesDTO)).thenReturn(mockEventsDTOs);
 
         // prepare the request
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
@@ -68,8 +68,7 @@ public class EventsControllerTest {
         // fire the request
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-        LOGGER.log(Level.INFO, "RESPONSE===============> " + result.getResponse().getContentAsString());
-        String expected = "{:Course1,name:Spring,description:10Steps}";
+        String expected = "{}";
 
         JSONAssert.assertEquals(expected, result.getResponse()
                 .getContentAsString(), false);

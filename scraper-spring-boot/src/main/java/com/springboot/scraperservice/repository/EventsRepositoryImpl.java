@@ -30,7 +30,7 @@ public class EventsRepositoryImpl {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public List<Events> findAllByProperties(QueryPropertiesDTO queryPropertiesDTO) throws Exception {
+    public List<Events> findAllByProperties(QueryPropertiesDTO queryPropertiesDTO) {
         final Query query = new Query();
         final List<Criteria> criteria = new ArrayList<>();
 
@@ -58,7 +58,7 @@ public class EventsRepositoryImpl {
             }
         } catch (Exception ex) {
 
-            LOGGER.log(Level.WARNING, String.format("Unable to process query parameters [%s]. Reason: "
+            LOGGER.log(Level.WARNING, String.format("Unable to process query parameters [%s]. Reason: %s"
                     , queryPropertiesDTO.toString(), ex));
             throw new BadRequestException("Unable to process query parameters");
         }
@@ -70,7 +70,22 @@ public class EventsRepositoryImpl {
             LOGGER.log(Level.SEVERE,
                     String.format("Error occurred while fetching the data from database [%s]. Reason: %s"
                             , queryPropertiesDTO.toString(), ex));
-            throw new Exception("Error occurred while processing the data.");
         }
+        return null;
+    }
+
+    public List<String> findDistinctByAttributes(String attribute) {
+        final Query query = new Query();
+        query.addCriteria(Criteria.where(attribute).ne(null));
+
+        try {
+            return mongoTemplate.findDistinct(query, attribute, Events.class, String.class);
+        } catch (Exception ex) {
+
+            LOGGER.log(Level.SEVERE,
+                    String.format("Error occurred while fetching the attributes from database [%s]. Reason: %s"
+                            , attribute, ex));
+        }
+        return null;
     }
 }

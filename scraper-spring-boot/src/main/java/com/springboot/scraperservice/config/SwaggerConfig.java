@@ -19,7 +19,6 @@ import java.util.ArrayList;
 
 @Configuration
 @EnableSwagger2
-@Import(BeanValidatorPluginsConfiguration.class)
 @Profile({"dev"})
 public class SwaggerConfig {
 
