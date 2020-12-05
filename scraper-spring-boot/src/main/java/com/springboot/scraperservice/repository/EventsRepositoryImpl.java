@@ -1,5 +1,6 @@
 package com.springboot.scraperservice.repository;
 
+import com.springboot.scraperservice.constants.Constants;
 import com.springboot.scraperservice.dto.QueryPropertiesDTO;
 import com.springboot.scraperservice.exceptions.http.BadRequestException;
 import com.springboot.scraperservice.model.Events;
@@ -36,17 +37,17 @@ public class EventsRepositoryImpl {
 
         try {
             if (queryPropertiesDTO.getStartDate() != null && queryPropertiesDTO.getEndDate() != null) {
-                query.addCriteria(Criteria.where("startDate")
+                query.addCriteria(Criteria.where(Constants.EVENTS_START_DATE)
                         .gte(queryPropertiesDTO.getStartDate())
                         .lte(queryPropertiesDTO.getEndDate()));
             }
 
             if (queryPropertiesDTO.getLocation() != null) {
-                criteria.add(Criteria.where("location").is(queryPropertiesDTO.getLocation()));
+                criteria.add(Criteria.where(Constants.EVENTS_LOCATION).is(queryPropertiesDTO.getLocation()));
             }
 
             if (queryPropertiesDTO.getWebsite() != null) {
-                criteria.add(Criteria.where("website").is(queryPropertiesDTO.getWebsite()));
+                criteria.add(Criteria.where(Constants.EVENTS_WEBSITE).is(queryPropertiesDTO.getWebsite()));
             }
 
             if (!criteria.isEmpty()) {

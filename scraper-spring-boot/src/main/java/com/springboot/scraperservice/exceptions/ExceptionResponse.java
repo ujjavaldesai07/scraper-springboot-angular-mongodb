@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExceptionResponse {
+
     private Integer errorCode;
     private HttpStatus errorStatus;
     private String errorMessage;

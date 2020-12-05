@@ -7,6 +7,10 @@ import {catchError, retry} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 import {ErrorAppState} from '../reducers/errorReducer';
 
+/**
+ * Service to handle make events collection APIs REST calls.
+ */
+
 @Injectable({
   providedIn: 'root'
 })
@@ -16,6 +20,7 @@ export class EventsService {
   constructor(private store: Store<ErrorAppState>, private http: HttpClient) {
   }
 
+  // handle errors
   errorHandler(error: HttpErrorResponse): Observable<never> {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
@@ -34,8 +39,13 @@ export class EventsService {
       'Something bad happened; please try again later.');
   }
 
+  /**
+   * Gets all events if queryString is null else it will query based on the parameters
+   * @param queryString: default will be null
+   */
   getEvents(queryString = null): Observable<IEventsResponseData[]> {
     // @ts-ignore
+    // check if we have query parameters and process accordingly
     return this.http
       .get<IEventsResponseData[]>(`${EVENTS_API_ROUTE}${queryString !== null ? `?${queryString}` : ''}`)
       .pipe(
@@ -44,9 +54,17 @@ export class EventsService {
       );
   }
 
-  getAttributes(queryString = null): Observable<string[]> {
+  /**
+   * Gets all the filter options from the backend for eg to get all unique
+   * the website names, location etc.
+   * @param queryString: required parameter
+   */
+  getAttributes(queryString: string): Observable<string[]> {
+    if (queryString === null) {
+      console.error('queryString is required parameter');
+    }
     return this.http
-      .get<string[]>(`${(EVENTS_ATTRIBUTES_API_ROUTE)}${queryString !== null ? `?attr=${queryString}` : ''}`)
+      .get<string[]>(`${(EVENTS_ATTRIBUTES_API_ROUTE)}?attr=${queryString}`)
       .pipe(
         retry(2), // retry a failed request up to 2 times
         catchError(this.errorHandler) // then handle the error

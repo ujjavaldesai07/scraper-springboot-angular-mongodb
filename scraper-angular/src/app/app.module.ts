@@ -25,11 +25,14 @@ import {StoreModule} from '@ngrx/store';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {HomeComponent} from './views/home/home.component';
 import {ErrorComponent} from './errors/error/error.component';
+import {MatButtonModule} from '@angular/material/button';
+
 import {tableReducer} from './reducers/tableReducer';
 import {errorReducer} from './reducers/errorReducer';
 
 @NgModule({
   declarations: [
+    // components
     AppComponent,
     TableComponent,
     BasicDatePickerComponent,
@@ -43,6 +46,7 @@ import {errorReducer} from './reducers/errorReducer';
     ErrorComponent
   ],
   imports: [
+    // modules
     BrowserModule,
     HttpClientModule,
     CommonModule,
@@ -55,10 +59,15 @@ import {errorReducer} from './reducers/errorReducer';
     MatGridListModule,
     MatIconModule,
     MatInputModule,
+
+    // reducers
     StoreModule.forRoot({tableReducer, errorReducer}),
+
+    // this is used to configure redux dev tools for analyzing states
     StoreDevtoolsModule.instrument({
       maxAge: 10 // saves upto 10 records in redux dex tools
-    })
+    }),
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -11,6 +11,7 @@ export class StartDatePickerComponent implements OnInit {
   datePickerState: DatePickerState;
 
   constructor() {
+    // init datePickerState
     this.datePickerState = new DatePickerState('Start Date', SET_START_DATE);
   }
 

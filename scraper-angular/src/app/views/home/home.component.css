@@ -1,0 +1,13 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: white;
+}
+
+.error-text {
+  display: flex;
+  justify-content: center;
+  padding-top: 40px;
+  font-size: 2rem;
+}

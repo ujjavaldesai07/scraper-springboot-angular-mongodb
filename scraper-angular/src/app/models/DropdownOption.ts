@@ -1,9 +1,25 @@
 export class DropdownOption {
-  text: string;
-  value: string;
+  private pText: string;
+  private pValue: string;
 
-  constructor(text: string, value: string) {
-    this.text = text;
-    this.value = value;
+  constructor(pText: string, pValue: string) {
+    this.pText = pText;
+    this.pValue = pValue;
+  }
+
+  get text(): string {
+    return this.pText;
+  }
+
+  set text(pText: string) {
+    this.pText = pText;
+  }
+
+  get value(): string {
+    return this.pValue;
+  }
+
+  set value(pValue: string) {
+    this.pValue = pValue;
   }
 }

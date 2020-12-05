@@ -1,30 +1,43 @@
-<div style="position: sticky; top: 0; z-index: 100; background-color: white">
+<!--header-->
+<div class="header">
+
+  <!--  title-->
   <mat-grid-list cols="1" rowHeight="50px">
     <mat-grid-tile>
       <h1>Tech Events</h1>
     </mat-grid-tile>
   </mat-grid-list>
 
-  <mat-grid-list cols="5" rowHeight="100px">
+  <!--filters and sorts options-->
+  <mat-grid-list cols="5" rowHeight="70px">
+
     <mat-grid-tile>
       <app-start-date-picker></app-start-date-picker>
     </mat-grid-tile>
+
     <mat-grid-tile>
       <app-end-date-picker></app-end-date-picker>
     </mat-grid-tile>
+
     <mat-grid-tile>
       <app-filter-location></app-filter-location>
     </mat-grid-tile>
+
     <mat-grid-tile>
       <app-filter-website></app-filter-website>
     </mat-grid-tile>
+
     <mat-grid-tile>
       <app-sort-events></app-sort-events>
     </mat-grid-tile>
   </mat-grid-list>
+
 </div>
+
+<!--table-->
 <app-table></app-table>
 
-<div style="display: flex; justify-content: center; padding-top: 40px; font-size: 2rem">
-<app-error></app-error>
+<!--display errors-->
+<div class="error-text">
+  <app-error></app-error>
 </div>

@@ -78,15 +78,15 @@ public class EventsDataService implements DataService {
 
         // find the event by title which will be unique
         Query query = new Query();
-        query.addCriteria(Criteria.where("title").is(event.getTitle()));
+        query.addCriteria(Criteria.where(Constants.EVENTS_TITLE).is(event.getTitle()));
 
         // prepare update object
         Update update = new Update();
-        update.set("title", event.getTitle());
-        update.set("website", event.getWebsite());
-        update.set("startDate", event.getStartDate());
-        update.set("endDate", event.getEndDate());
-        update.set("location", event.getLocation());
+        update.set(Constants.EVENTS_TITLE, event.getTitle());
+        update.set(Constants.EVENTS_WEBSITE, event.getWebsite());
+        update.set(Constants.EVENTS_START_DATE, event.getStartDate());
+        update.set(Constants.EVENTS_END_DATE, event.getEndDate());
+        update.set(Constants.EVENTS_LOCATION, event.getLocation());
 
         // execute the query
         mongoTemplate.upsert(query, update, Events.class);

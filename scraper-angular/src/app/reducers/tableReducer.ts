@@ -1,6 +1,9 @@
-import {SET_END_DATE, SET_LOCATION_FILTER, SET_SORT_TYPE, SET_START_DATE, SET_WEBSITE_FILTER} from '../actions/types';
+import {
+  SET_END_DATE, SET_LOCATION_FILTER,
+  SET_SORT_TYPE, SET_START_DATE, SET_WEBSITE_FILTER
+} from '../actions/types';
 
-export interface AppState {
+export interface TableAppState {
   website: string;
   location: string;
   startDate: string;
@@ -8,7 +11,7 @@ export interface AppState {
   sort: string;
 }
 
-const INITIAL_TABLE_STATE: AppState = {
+const INITIAL_TABLE_STATE: TableAppState = {
   website: null,
   location: null,
   startDate: null,
@@ -16,7 +19,16 @@ const INITIAL_TABLE_STATE: AppState = {
   sort: null
 };
 
-export function tableReducer(state: AppState = INITIAL_TABLE_STATE, {type, payload}): AppState {
+/**
+ * Redux store to maintain state of the table by setting filter and sort options.
+ * Data will be displayed based on this options.
+ *
+ * @param state: contains all the supported filter and sort options
+ * @param type: action type of filter/sort invoked
+ * @param payload: data of that attribute to set the state.
+ */
+
+export function tableReducer(state: TableAppState = INITIAL_TABLE_STATE, {type, payload}): TableAppState {
   switch (type) {
     case SET_LOCATION_FILTER:
       return {...state, location: payload};
@@ -32,7 +44,7 @@ export function tableReducer(state: AppState = INITIAL_TABLE_STATE, {type, paylo
 
     case SET_SORT_TYPE:
       return {...state, sort: payload};
-      
+
     default:
       return state;
   }

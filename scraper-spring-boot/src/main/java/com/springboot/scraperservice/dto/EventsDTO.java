@@ -16,12 +16,8 @@ import lombok.ToString;
 public class EventsDTO {
 
     private String title;
-
     private String location;
-
     private String website;
-
     private String startDate;
-
     private String endDate;
 }
