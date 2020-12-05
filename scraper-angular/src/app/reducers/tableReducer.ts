@@ -32,5 +32,8 @@ export function tableReducer(state: AppState = INITIAL_TABLE_STATE, {type, paylo
 
     case SET_SORT_TYPE:
       return {...state, sort: payload};
+      
+    default:
+      return state;
   }
 }

@@ -4,7 +4,7 @@ import {EventsService} from '../services/events.service';
 import {Store} from '@ngrx/store';
 import {AppState} from '../reducers/tableReducer';
 import {DEFAULT_DROPDOWN_VALUE, EVENTS_COLLECTION_SCHEMA} from '../constants/constants';
-import {SET_ERROR_INFO} from '../actions/types';
+import {RESET_ERROR_INFO, SET_ERROR_INFO} from '../actions/types';
 
 @Component({
   selector: 'app-table',
@@ -24,18 +24,22 @@ export class TableComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.eventsService.getEvents().subscribe(data => this.dataSource = data,
+    this.eventsService.getEvents().subscribe(data => {
+        this.dataSource = data;
+        this.checkIfDataIsEmpty();
+      },
       error => this.store.dispatch({type: SET_ERROR_INFO, payload: {error}}));
   }
 
   getQueryString(state: AppState): string {
 
-    if(state.startDate != null && state.endDate) {
+    if (state.startDate != null && state.endDate) {
       const sDate: Date = new Date(state.startDate);
       const eDate: Date = new Date(state.endDate);
 
       if (sDate > eDate) {
         alert('Start Date must not be after End Date!');
+        return null;
       }
     }
 
@@ -55,7 +59,10 @@ export class TableComponent implements OnInit {
 
     const queryString: string = this.getQueryString(state);
 
-    this.eventsService.getEvents(queryString).subscribe(data => this.dataSource = data,
+    this.eventsService.getEvents(queryString).subscribe(data => {
+        this.dataSource = data;
+        this.checkIfDataIsEmpty();
+      },
       error => this.store.dispatch({type: SET_ERROR_INFO, payload: {error}}));
     window.scrollTo(0, 0);
   }
@@ -63,6 +70,8 @@ export class TableComponent implements OnInit {
   checkIfDataIsEmpty(): void {
     if (this.dataSource !== null && this.dataSource !== undefined && this.dataSource.length === 0) {
       this.store.dispatch({type: SET_ERROR_INFO, payload: {error: 'Data Not Found'}});
+    } else {
+      this.store.dispatch({type: RESET_ERROR_INFO});
     }
   }
 

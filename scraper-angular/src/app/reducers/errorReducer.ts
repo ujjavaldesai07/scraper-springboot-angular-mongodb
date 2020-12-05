@@ -14,6 +14,12 @@ export function errorReducer(state: ErrorAppState = INITIAL_ERROR_STATE, {type, 
       return {...state, error: payload.error};
 
     case RESET_ERROR_INFO:
-      return {...state, error: null};
+      if (state.error !== null) {
+        return {...state, error: null};
+      }
+      return state;
+
+    default:
+      return state;
   }
 }
