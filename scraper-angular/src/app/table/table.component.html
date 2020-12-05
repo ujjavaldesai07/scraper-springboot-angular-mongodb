@@ -1,9 +1,9 @@
 <div class="center-table">
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
 
-    <ng-container matColumnDef="serialNumber" >
-      <th mat-header-cell *matHeaderCellDef >No.</th>
-      <td mat-cell *matCellDef="let row; let i = index">{{i+1}}</td>
+    <ng-container matColumnDef="serialNumber">
+      <th mat-header-cell *matHeaderCellDef>No.</th>
+      <td mat-cell *matCellDef="let row; let i = index">{{i + 1}}</td>
     </ng-container>
 
     <ng-container [matColumnDef]="column.attributeName" *ngFor="let column of colsInfo;">
@@ -14,4 +14,10 @@
     <tr mat-header-row *matHeaderRowDef="['serialNumber'].concat(displayedColumns)"></tr>
     <tr mat-row *matRowDef="let row; columns: ['serialNumber'].concat(displayedColumns);"></tr>
   </table>
+</div>
+
+<div>
+  <mat-label>
+    {{ checkIfDataIsEmpty() }}
+  </mat-label>
 </div>
