@@ -12,3 +12,13 @@ table {
   background-color: black;
   color: white;
 }
+
+.custom-progress-spinner-container {
+  padding-top: 10em;
+}
+
+.custom-progress-spinner > * {
+  position:relative;
+  margin:auto;
+  padding-top: 1em;
+}

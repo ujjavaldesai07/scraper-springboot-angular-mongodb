@@ -26,6 +26,7 @@ import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {HomeComponent} from './views/home/home.component';
 import {ErrorComponent} from './errors/error/error.component';
 import {MatButtonModule} from '@angular/material/button';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 import {tableReducer} from './reducers/tableReducer';
 import {errorReducer} from './reducers/errorReducer';
@@ -67,7 +68,8 @@ import {errorReducer} from './reducers/errorReducer';
     StoreDevtoolsModule.instrument({
       maxAge: 10 // saves upto 10 records in redux dex tools
     }),
-    MatButtonModule
+    MatButtonModule,
+    MatProgressSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

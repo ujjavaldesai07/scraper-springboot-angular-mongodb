@@ -1,9 +1,13 @@
-<mat-form-field appearance="fill">
-  <mat-label>{{ dropdownState.label }}</mat-label>
-  <mat-select (selectionChange)="onSelectedValue($event)">
-    <mat-option *ngFor="let dropdownOption of dropdownState.options"
-                [value]="dropdownOption.value" [id]="dropdownState.actionType">
-      {{ dropdownOption.text }}
-    </mat-option>
-  </mat-select>
+<mat-form-field appearance="fill" *ngIf="dropdownState.options.length > 1 else loading">
+    <mat-label>{{ dropdownState.label }}</mat-label>
+    <mat-select (selectionChange)="onSelectedValue($event)">
+      <mat-option *ngFor="let dropdownOption of dropdownState.options"
+                  [value]="dropdownOption.value" [id]="dropdownState.actionType">
+        {{ dropdownOption.text }}
+      </mat-option>
+    </mat-select>
 </mat-form-field>
+
+<ng-template #loading>
+  <mat-spinner color="warn" diameter="30"></mat-spinner>
+</ng-template>

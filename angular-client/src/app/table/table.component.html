@@ -1,6 +1,5 @@
 <div class="center-table">
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
-
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" *ngIf="dataSource else loading">
     <ng-container matColumnDef="serialNumber">
       <th mat-header-cell *matHeaderCellDef>No.</th>
       <td mat-cell *matCellDef="let row; let i = index">{{i + 1}}</td>
@@ -14,4 +13,15 @@
     <tr mat-header-row *matHeaderRowDef="['serialNumber'].concat(displayedColumnIds)"></tr>
     <tr mat-row *matRowDef="let row; columns: ['serialNumber'].concat(displayedColumnIds);"></tr>
   </table>
+
+  <ng-template #loading>
+    <div class="custom-progress-spinner-container">
+      <div class="custom-progress-spinner">
+        <mat-spinner color="warn" diameter="30"></mat-spinner>
+        <mat-label>
+          Fetching events. Please wait!
+        </mat-label>
+      </div>
+    </div>
+  </ng-template>
 </div>
