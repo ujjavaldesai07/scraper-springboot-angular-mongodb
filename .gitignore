@@ -1,2 +1,3 @@
 scraper-spring-boot/target
 scraper-spring-boot/logs
+node_modules/
