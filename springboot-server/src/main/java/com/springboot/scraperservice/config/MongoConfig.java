@@ -37,9 +37,7 @@ public class MongoConfig {
                         try {
                             // set the min & max size of pool so we always have some connection in the pool
                             // and we dont have to create new connection every time we access mongodb.
-                            builder.maxSize(20)
-                                    .minSize(10)
-                                    .maxWaitTime(60, TimeUnit.SECONDS);
+                            builder.maxSize(20).minSize(10).maxWaitTime(60, TimeUnit.SECONDS);
                         } catch (NumberFormatException e) {
                             LOGGER.log(Level.SEVERE,
                                     "Unable to set connection pool settings for mongoDB." +
@@ -63,7 +61,7 @@ public class MongoConfig {
         try {
 
             // generate MongoTemplate to use the mongoDB advanced APIs like upsert, insertAll etc.
-            mongoTemplate = new MongoTemplate(mongoClient(), System.getenv("DB_NAME"));
+            mongoTemplate = new MongoTemplate(mongoClient(), "events");
 
             // adding indexing
             addASCIndexing(Constants.EVENTS_INDEX_ASC_ATTRIBUTES, Events.class);

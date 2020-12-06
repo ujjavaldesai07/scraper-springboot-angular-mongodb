@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.spring-boot</groupId>
-	<artifactId>scraper-dataService</artifactId>
+	<artifactId>scraper-data-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>scraper-dataService</name>
+	<name>scraper-data-service</name>
 	<description>Backend dataService for managing scraper data.</description>
 
 	<properties>
@@ -83,10 +83,19 @@
     </dependencies>
 
 	<build>
+		<finalName>scraper-data-service</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>repackage</id>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

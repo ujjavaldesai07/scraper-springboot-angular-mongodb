@@ -30,10 +30,10 @@ public class ExecutorServiceManager {
      * @param maxThreadCount: Max number of threads assigned to the pool.
      * @return
      */
-    public ExecutorService getNewFixedThreadPool(String maxThreadCount, String executorServiceName) {
+    public ExecutorService getNewFixedThreadPool(int maxThreadCount, String executorServiceName) {
         try {
             // start the executor service with MAX_SCRAPER_THREAD_COUNT
-            executorService = Executors.newFixedThreadPool(Integer.parseInt(maxThreadCount));
+            executorService = Executors.newFixedThreadPool(maxThreadCount);
             setExecutorService(executorService);
             return executorService;
 

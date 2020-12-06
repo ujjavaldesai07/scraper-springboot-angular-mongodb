@@ -36,7 +36,7 @@ public class ScraperEngine {
 
         // get the executor service
         ExecutorService executorService = executorServiceManager
-                .getNewFixedThreadPool(System.getenv("MAX_SCRAPER_THREAD_COUNT"),
+                .getNewFixedThreadPool(3,
                         Constants.SCRAPER_ENGINE_EXECUTOR_SERVICE);
 
         // iterate over the Scraper instances
