@@ -5,8 +5,10 @@ import lombok.Setter;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,23 +21,20 @@ import java.util.logging.Logger;
 
 @Setter
 @Getter
-@Component(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Component
 public class ExecutorServiceManager {
     private final static Logger LOGGER = Logger.getLogger(String.valueOf(ExecutorServiceManager.class));
-    private ExecutorService executorService;
 
     /**
      * This will be used for CPU bound operations
      *
      * @param maxThreadCount: Max number of threads assigned to the pool.
-     * @return
+     * @return new executorService with fixed thread pool
      */
     public ExecutorService getNewFixedThreadPool(int maxThreadCount, String executorServiceName) {
         try {
             // start the executor service with MAX_SCRAPER_THREAD_COUNT
-            executorService = Executors.newFixedThreadPool(maxThreadCount);
-            setExecutorService(executorService);
-            return executorService;
+            return Executors.newFixedThreadPool(maxThreadCount);
 
         } catch (NumberFormatException ex) {
 
@@ -53,16 +52,14 @@ public class ExecutorServiceManager {
     }
 
     /**
-     * This is cached pool used for IO bound operation, where we dont know
-     * how many threads are needed.
+     * This is cached pool used for IO bound operation, threads are created by
+     * executor server as per our number of data in the queue.
      *
-     * @return
+     * @return new executorService with fixed thread pool
      */
     public ExecutorService getCachedThreadPool(String executorServiceName) {
         try {
-            executorService = Executors.newCachedThreadPool();
-            setExecutorService(executorService);
-            return executorService;
+            return Executors.newCachedThreadPool();
 
         } catch (Exception ex) {
 
@@ -74,18 +71,37 @@ public class ExecutorServiceManager {
     }
 
     /**
+     * This function shutdown the executionService upon the tasks completion.
+     *
+     * @param futureList: takes the list of futures from the tasks getting executed.
+     */
+    public void shutdownUponTaskCompletion(List<Future<?>> futureList, ExecutorService executorService) {
+        for (Future<?> future : futureList) {
+            try {
+                // check whether we have value else wait as get() is a blocking call
+                future.get();
+            } catch (Exception ex) {
+                LOGGER.log(Level.SEVERE, "Unable to get the value from the future.");
+            }
+        }
+
+        // now we are sure that all the tasks are completed at this point.
+        executorService.shutdown();
+    }
+
+    /**
      * Shutdown the service after sometime as this will not get automatically terminated.
      *
      * @param seconds:             wait for number of given seconds and then terminate
      * @param executorServiceName: service name to check which if exceptions occurred.
      */
-    public void terminate(int seconds, String executorServiceName) {
+    public void scheduleTermination(int seconds, String executorServiceName, ExecutorService executorService) {
         try {
-            if (getExecutorService().awaitTermination(seconds, TimeUnit.SECONDS)) {
+            if (executorService.awaitTermination(seconds, TimeUnit.SECONDS)) {
                 LOGGER.log(Level.INFO, String.format("Task completed for executive service %s", executorServiceName));
             } else {
                 LOGGER.log(Level.INFO, String.format("Forced shutdown for executive service %s", executorServiceName));
-                getExecutorService().shutdownNow();
+                executorService.shutdownNow();
             }
         } catch (InterruptedException ex) {
             LOGGER.log(Level.SEVERE,

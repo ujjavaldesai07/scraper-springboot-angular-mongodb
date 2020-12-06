@@ -4,9 +4,11 @@ import com.springboot.scraperservice.constants.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,12 +25,14 @@ public class ScraperDataDispatcher<T> implements Runnable {
     private final ScraperStateManager<T> scraperStateManager;
     private final ExecutorServiceManager executorServiceManager;
     private ExecutorService executorService;
+    private final List<Future<?>> futureList;
 
     @Autowired
     public ScraperDataDispatcher(ScraperStateManager<T> scraperStateManager,
                                  ExecutorServiceManager executorServiceManager) {
         this.scraperStateManager = scraperStateManager;
         this.executorServiceManager = executorServiceManager;
+        futureList = new LinkedList<>();
 
         setExecutorService();
     }
@@ -37,6 +41,7 @@ public class ScraperDataDispatcher<T> implements Runnable {
      * Sets the getCachedThreadPool to perform I/O or database operations.
      */
     private void setExecutorService() {
+        LOGGER.log(Level.INFO, String.format("Scraper Data Dispatcher executorServiceManager = %d", executorServiceManager.hashCode()));
         executorService = executorServiceManager.getCachedThreadPool(Constants.SCRAPER_DISPATCHER_EXECUTOR_SERVICE);
     }
 
@@ -62,7 +67,10 @@ public class ScraperDataDispatcher<T> implements Runnable {
                                 + scraperDataState.getScraperId());
                     }
 
-                    executorService.execute(() -> {
+                    futureList.add(executorService.submit(() -> {
+                        LOGGER.log(Level.INFO, String.format("[**Dispatching Data Thread**]: %s",
+                                Thread.currentThread().getName()));
+
                         // check if the document is still processing
                         while (scraperDataState.getIsActive() || scraperDataState.getDataQueue().size() > 0) {
 
@@ -85,7 +93,7 @@ public class ScraperDataDispatcher<T> implements Runnable {
 
                         // release the memory hold by the state and container
                         scraperStateManager.unregisterScraperState(scraperDataState);
-                    });
+                    }));
                 }
 
             }
@@ -95,16 +103,28 @@ public class ScraperDataDispatcher<T> implements Runnable {
                     "Error occurred while dispatching events data to database. Reason: %s", ex));
         }
 
+        executorService.shutdown();
         LOGGER.log(Level.INFO, "Finished dispatching events");
     }
 
     private void startDispatch() {
         LOGGER.log(Level.INFO, "Started dispatching the data");
 
+        // return if unable to start executorService
+        if(executorService == null) {
+            LOGGER.log(Level.SEVERE,
+                    "Error occurred while starting the executor service for Scraper Data Dispatcher ");
+            return;
+        }
+
         dispatchData();
 
-        // forced shutdown of the executor service if the processing is not finished within 10 seconds
-        executorServiceManager.terminate(10, Constants.SCRAPER_DISPATCHER_EXECUTOR_SERVICE);
+        // check the completion status and shut down the executor service
+        executorServiceManager.shutdownUponTaskCompletion(futureList, executorService);
+
+        // double check whether the executor service is shutdown or not.
+        // If not then after 10 seconds do force shutdown.
+        executorServiceManager.scheduleTermination(10, Constants.SCRAPER_DISPATCHER_EXECUTOR_SERVICE, executorService);
 
         // tear down the map as we are done now.
         scraperStateManager.destroyScraperStateMap();
@@ -125,6 +145,7 @@ public class ScraperDataDispatcher<T> implements Runnable {
      */
     @Override
     public void run() {
+        LOGGER.log(Level.INFO, String.format("[**Scraper Dispatcher Thread**]: %s", Thread.currentThread().getName()));
         startDispatch();
     }
 }

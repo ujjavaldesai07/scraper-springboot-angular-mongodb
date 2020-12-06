@@ -136,6 +136,7 @@ public class ComputerWorldScraper implements Scraper, Runnable {
      */
     @Override
     public void run() {
+        LOGGER.log(Level.INFO, String.format("[**Scraper ComputerWorldScraper Thread**]: %s", Thread.currentThread().getName()));
         startScraper();
     }
 }
