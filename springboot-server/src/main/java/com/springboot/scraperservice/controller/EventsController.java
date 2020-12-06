@@ -2,6 +2,7 @@ package com.springboot.scraperservice.controller;
 
 import com.springboot.scraperservice.constants.Routes;
 import com.springboot.scraperservice.dto.QueryPropertiesDTO;
+import com.springboot.scraperservice.model.Events;
 import com.springboot.scraperservice.service.DataService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Api(value = "Supports GET operation", tags = {"Event"})
 @RestController
@@ -55,7 +57,13 @@ public class EventsController {
         queryPropertiesDTO.setEndDate(endDate);
         queryPropertiesDTO.setSort(sort);
 
-        return ResponseEntity.ok(dataService.findByParameter(queryPropertiesDTO));
+        // if result is null then send response as Not Found.
+        Object result = dataService.findByParameter(queryPropertiesDTO);
+        if (result != null) {
+            return ResponseEntity.ok((List<Events>) result);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     /**
@@ -66,7 +74,14 @@ public class EventsController {
     @ApiOperation(value = "Endpoint to provide data for the attributes such website names, locations etc.")
     @GetMapping(value = Routes.EVENTS_FILTER_SORT_ATTRIBUTES_ENDPOINT)
     public ResponseEntity<?> getWebsiteNames(@RequestParam(required = false) String attr) {
-        return ResponseEntity.ok(dataService.findByParameter(attr));
+
+        // if result is null then send response as Not Found.
+        Object result = dataService.findByParameter(attr);
+        if (result != null) {
+            return ResponseEntity.ok((List<String>) result);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

@@ -19,7 +19,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Configuration
-//@Profile({"prod"})
 public class MongoConfig {
     private final static Logger LOGGER = Logger.getLogger(String.valueOf(MongoConfig.class));
     private MongoTemplate mongoTemplate;

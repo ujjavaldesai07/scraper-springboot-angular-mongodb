@@ -31,7 +31,7 @@ public class ScraperEngine {
     /**
      * Starts the ScraperEngine
      */
-    public void begin() {
+    public void start() {
         LOGGER.log(Level.INFO, "Starting the Scraper Engine.");
 
         // get the executor service
