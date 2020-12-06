@@ -1,4 +1,4 @@
-#Web Scraper
+# Web Scraper
 Web Scraper built using Spring Boot, Angular, and MongoDB. This tool scrapes the data from the website stores it in the database and will show the data in table view with filters and sorting options in the frontend.
 
 **Technology Used**
@@ -22,10 +22,12 @@ Web Scraper built using Spring Boot, Angular, and MongoDB. This tool scrapes the
 **Steps to run backend application:**
 1. Clone/Download the repository.
 
-2. Set the environmental variables.     
-   ACTIVE_PROFILE=<prod/dev>;
-   MONGODB_URI=<Connection String>
-   CLIENT_URL=<Frontend Client URL>
+2. Set the environmental variables.  
+   ```   
+      ACTIVE_PROFILE=<prod/dev>;
+      MONGODB_URI=<Connection String>
+      CLIENT_URL=<Frontend Client URL>
+   ```
 
 3. Build the jar file from springboot-server directory.
    ```
