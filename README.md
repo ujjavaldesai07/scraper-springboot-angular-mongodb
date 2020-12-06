@@ -8,7 +8,7 @@ Web Scraper built using Spring Boot, Angular, and MongoDB. This tool scrapes the
 **DEMO**
 - Deployed to Heroku Cloud:
 
-  https://shoppers-ecom-app.herokuapp.com
+  https://scraper-events.herokuapp.com
 
   **Note:** It is running on a free dyno, so the services go to sleep if not in use.
        For the first time, it may take some time to respond.
@@ -38,7 +38,12 @@ Web Scraper built using Spring Boot, Angular, and MongoDB. This tool scrapes the
    ```
 
 **Steps to run frontend application:**
-1. Run the below command from angular-client directory.
+1. Go to file angular-client/src/app/constants/routes.ts and set the backend url.
+   ```
+      BACKEND_SERVER_URL=<Backend URL>
+   ```
+   
+2. Run the below command from angular-client directory.
    ```
       ng serve
    ```
