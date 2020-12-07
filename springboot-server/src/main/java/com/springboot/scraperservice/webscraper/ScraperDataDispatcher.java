@@ -90,9 +90,6 @@ public class ScraperDataDispatcher<T> implements Runnable {
                                 }
                             }
                         }
-
-                        // release the memory hold by the state and container
-                        scraperStateManager.unregisterScraperState(scraperDataState);
                     }));
                 }
 
@@ -103,7 +100,6 @@ public class ScraperDataDispatcher<T> implements Runnable {
                     "Error occurred while dispatching events data to database. Reason: %s", ex));
         }
 
-        executorService.shutdown();
         LOGGER.log(Level.INFO, "Finished dispatching events");
     }
 
@@ -111,7 +107,7 @@ public class ScraperDataDispatcher<T> implements Runnable {
         LOGGER.log(Level.INFO, "Started dispatching the data");
 
         // return if unable to start executorService
-        if(executorService == null) {
+        if (executorService == null) {
             LOGGER.log(Level.SEVERE,
                     "Error occurred while starting the executor service for Scraper Data Dispatcher ");
             return;
@@ -119,15 +115,8 @@ public class ScraperDataDispatcher<T> implements Runnable {
 
         dispatchData();
 
-        // check the completion status and shut down the executor service
-        executorServiceManager.shutdownUponTaskCompletion(futureList, executorService);
-
-        // double check whether the executor service is shutdown or not.
-        // If not then after 10 seconds do force shutdown.
-        executorServiceManager.scheduleTermination(10, Constants.SCRAPER_DISPATCHER_EXECUTOR_SERVICE, executorService);
-
-        // tear down the map as we are done now.
-        scraperStateManager.destroyScraperStateMap();
+        // check the completion status
+        executorServiceManager.waitForTaskCompletion(futureList, executorService);
 
         LOGGER.log(Level.INFO, "Finished dispatching the data");
     }

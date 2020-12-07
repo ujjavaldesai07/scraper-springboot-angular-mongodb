@@ -119,6 +119,9 @@ public class TechMemeScraper implements Scraper, Runnable {
     private void processDocument(Document document) {
         LOGGER.log(Level.INFO, "Started Processing TechMeme document");
 
+        // make this active as we are continuously scraping
+        scraperEventsDataState.setIsActive(true);
+
         try {
             // iterate over the document
             for (Element row : document.select("div#events div.rhov")) {

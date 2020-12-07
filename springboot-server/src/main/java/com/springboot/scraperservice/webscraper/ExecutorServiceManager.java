@@ -75,7 +75,7 @@ public class ExecutorServiceManager {
      *
      * @param futureList: takes the list of futures from the tasks getting executed.
      */
-    public void shutdownUponTaskCompletion(List<Future<?>> futureList, ExecutorService executorService) {
+    public void waitForTaskCompletion(List<Future<?>> futureList, ExecutorService executorService) {
         for (Future<?> future : futureList) {
             try {
                 // check whether we have value else wait as get() is a blocking call
@@ -84,9 +84,6 @@ public class ExecutorServiceManager {
                 LOGGER.log(Level.SEVERE, "Unable to get the value from the future.");
             }
         }
-
-        // now we are sure that all the tasks are completed at this point.
-        executorService.shutdown();
     }
 
     /**
