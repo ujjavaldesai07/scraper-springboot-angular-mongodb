@@ -61,7 +61,7 @@ public class MongoConfig {
         try {
 
             // generate MongoTemplate to use the mongoDB advanced APIs like upsert, insertAll etc.
-            mongoTemplate = new MongoTemplate(mongoClient(), "events");
+            mongoTemplate = new MongoTemplate(mongoClient(), "Scraper");
 
             // adding indexing
             addASCIndexing(Constants.EVENTS_INDEX_ASC_ATTRIBUTES, Events.class);
