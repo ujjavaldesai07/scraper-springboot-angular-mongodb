@@ -34,7 +34,6 @@ public class TechMemeScraper implements Scraper, Runnable {
         this.scraperEventsDataState = scraperEventsDataState;
 
         // register & initialize the the state in scraperStateHolder
-        scraperEventsDataState.setIsActive(true);
         scraperEventsDataState.setScraperId(ScraperInfo.TECH_MEME.ID);
 
         // pass the database operation from which data service needs to get executed
@@ -118,6 +117,9 @@ public class TechMemeScraper implements Scraper, Runnable {
      */
     private void processDocument(Document document) {
         LOGGER.log(Level.INFO, "Started Processing TechMeme document");
+
+        // make this active as we are continuously scraping
+        scraperEventsDataState.setIsActive(true);
 
         try {
             // iterate over the document

@@ -57,6 +57,9 @@ public class ComputerWorldScraper implements Scraper, Runnable {
     private void processDocument(Document document) {
         LOGGER.log(Level.INFO, "Started Processing ComputerWorldScraper document");
 
+        // make this active as we are continuously scraping
+        scraperEventsDataState.setIsActive(true);
+
         try {
             // iterate over the document
             for (Element row : document.select("table.tablesorter tbody tr")) {
