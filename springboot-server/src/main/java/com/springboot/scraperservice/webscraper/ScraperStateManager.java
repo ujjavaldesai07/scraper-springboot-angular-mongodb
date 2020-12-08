@@ -39,11 +39,20 @@ public class ScraperStateManager<T> {
 
     public void registerScraperState(ScraperDataState<T> scraperDataState) {
         try {
+            scraperDataState.setIsActive(true);
             LOGGER.log(Level.INFO, String.format("Registering scraper state with id = %d",
                     scraperDataState.getScraperId()));
             serviceDataStateMap.get(scraperDataState.getScraperId()).add(scraperDataState);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Failed to register scraper data state");
+        }
+    }
+
+    public void reactivateScraperStates() {
+        for (Map.Entry<Integer, List<ScraperDataState<T>>> serviceDataStateEntry : serviceDataStateMap.entrySet()) {
+            for (ScraperDataState<T> scraperDataState : serviceDataStateEntry.getValue()) {
+                scraperDataState.setIsActive(true);
+            }
         }
     }
 

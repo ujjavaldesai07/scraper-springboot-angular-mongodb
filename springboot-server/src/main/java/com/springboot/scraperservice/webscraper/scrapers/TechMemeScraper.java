@@ -34,7 +34,6 @@ public class TechMemeScraper implements Scraper, Runnable {
         this.scraperEventsDataState = scraperEventsDataState;
 
         // register & initialize the the state in scraperStateHolder
-        scraperEventsDataState.setIsActive(true);
         scraperEventsDataState.setScraperId(ScraperInfo.TECH_MEME.ID);
 
         // pass the database operation from which data service needs to get executed
