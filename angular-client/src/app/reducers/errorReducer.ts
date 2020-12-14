@@ -1,10 +1,10 @@
 import {SET_ERROR_INFO, RESET_ERROR_INFO} from '../actions/types';
 
-export interface ErrorAppState {
+export interface IErrorAppState {
   error: string;
 }
 
-const INITIAL_ERROR_STATE: ErrorAppState = {
+const INITIAL_ERROR_STATE: IErrorAppState = {
   error: null,
 };
 
@@ -15,14 +15,14 @@ const INITIAL_ERROR_STATE: ErrorAppState = {
  * @param type: action type for which operation to perform for manipulating the state
  * @param payload: error msg to display
  */
-export function errorReducer(state: ErrorAppState = INITIAL_ERROR_STATE, {type, payload}): ErrorAppState {
+export function errorReducer(state: IErrorAppState = INITIAL_ERROR_STATE, {type, payload}): IErrorAppState {
   switch (type) {
     case SET_ERROR_INFO:
       return {...state, error: payload.error};
 
     case RESET_ERROR_INFO:
       if (state.error !== null) {
-        return {...state, error: null};
+        return INITIAL_ERROR_STATE;
       }
       return state;
 

@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {IEventsResponseData} from '../models/IEventsResponseData';
 import {EventsService} from '../services/events.service';
 import {Store} from '@ngrx/store';
-import {TableAppState} from '../reducers/tableReducer';
+import {ITableAppState} from '../reducers/tableReducer';
 import {DEFAULT_COMPONENT_VALUE, EVENTS_COLLECTION_SCHEMA, TABLE_REDUCER} from '../constants/constants';
 import {RESET_ERROR_INFO, SET_ERROR_INFO} from '../actions/types';
 import {DropdownOption} from '../models/DropdownOption';
@@ -24,7 +24,7 @@ export class TableComponent implements OnInit {
   dataSource: IEventsResponseData[];
 
   // inject redux store and event service
-  constructor(private store: Store<TableAppState>, private eventsService: EventsService) {
+  constructor(private store: Store<ITableAppState>, private eventsService: EventsService) {
     // set the column ids i.e. property of the object we will receive
     // from the backend server.
     EVENTS_COLLECTION_SCHEMA.forEach(
@@ -34,7 +34,7 @@ export class TableComponent implements OnInit {
     // select the state from the store and subscribe for the event
     // on table reducer changes, getEventsFromProperties will get fired.
     // @ts-ignore
-    store.select(TABLE_REDUCER).subscribe((state: TableAppState) => {
+    store.select(TABLE_REDUCER).subscribe((state: ITableAppState) => {
       this.getEventsFromProperties(state);
     });
   }
@@ -56,9 +56,9 @@ export class TableComponent implements OnInit {
   /**
    * This function is prepare the query string based on the
    * parameters set in the redux store.
-   * @param state: takes the TableAppState from redux.
+   * @param state: takes the ITableAppState from redux.
    */
-  getQueryString(state: TableAppState): [string, boolean] {
+  getQueryString(state: ITableAppState): [string, boolean] {
 
     // check if the start date is before end data
     if (state.startDate !== null && state.endDate !== null) {

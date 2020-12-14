@@ -2,7 +2,9 @@ import {Component, Input, OnInit} from '@angular/core';
 import {DropdownState} from '../../models/DropdownState';
 import {MatSelectChange} from '@angular/material/select';
 import {Store} from '@ngrx/store';
-import {TableAppState} from '../../reducers/tableReducer';
+import {ITableAppState} from '../../reducers/tableReducer';
+import {DropdownOption} from "../../models/DropdownOption";
+import {EventsService} from "../../services/events.service";
 
 @Component({
   selector: 'app-basic-drop-down',
@@ -16,14 +18,21 @@ export class BasicDropDownComponent implements OnInit {
   @Input() dropdownState: DropdownState;
 
   // redux store
-  constructor(private store: Store<TableAppState>) {
+  constructor(private store: Store<ITableAppState>, private eventsService: EventsService) {
   }
 
   ngOnInit(): void {
+    if (this.dropdownState.attrName !== null) {
+      // get the option list from the backend.
+      this.eventsService.getAttributes(this.dropdownState.attrName).subscribe(data => {
+          data.forEach(item => this.dropdownState.options.push(new DropdownOption(item, item)));
+        },
+        error => this.dropdownState.errorMsg = error);
+    }
   }
 
   // dispatch dropdown value to redux store based on action type on select event.
   onSelectedValue($event: MatSelectChange): void {
-    this.store.dispatch({type: this.dropdownState.actionType, payload: $event.value });
+    this.store.dispatch({type: this.dropdownState.actionType, payload: $event.value});
   }
 }

@@ -14,7 +14,7 @@ export class SortEventsComponent implements OnInit {
 
   constructor() {
     // push the dropdown options.
-    this.dropdownState = new DropdownState([], 'Sort By', SET_SORT_TYPE);
+    this.dropdownState = new DropdownState([], 'Sort By', SET_SORT_TYPE, null);
 
     // set the text and value from the schema which will be found in the object,
     EVENTS_COLLECTION_SCHEMA.forEach(

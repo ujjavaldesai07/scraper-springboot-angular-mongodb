@@ -3,7 +3,7 @@ import {
   SET_SORT_TYPE, SET_START_DATE, SET_WEBSITE_FILTER
 } from '../actions/types';
 
-export interface TableAppState {
+export interface ITableAppState {
   website: string;
   location: string;
   startDate: string;
@@ -11,7 +11,7 @@ export interface TableAppState {
   sort: string;
 }
 
-const INITIAL_TABLE_STATE: TableAppState = {
+const INITIAL_TABLE_STATE: ITableAppState = {
   website: null,
   location: null,
   startDate: null,
@@ -28,7 +28,7 @@ const INITIAL_TABLE_STATE: TableAppState = {
  * @param payload: data of that attribute to set the state.
  */
 
-export function tableReducer(state: TableAppState = INITIAL_TABLE_STATE, {type, payload}): TableAppState {
+export function tableReducer(state: ITableAppState = INITIAL_TABLE_STATE, {type, payload}): ITableAppState {
   switch (type) {
     case SET_LOCATION_FILTER:
       return {...state, location: payload};

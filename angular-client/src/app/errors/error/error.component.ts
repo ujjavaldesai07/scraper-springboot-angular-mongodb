@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {ErrorAppState} from '../../reducers/errorReducer';
+import {IErrorAppState} from '../../reducers/errorReducer';
 import {ERROR_REDUCER} from '../../constants/constants';
 
 @Component({
@@ -12,10 +12,10 @@ export class ErrorComponent implements OnInit {
   public errorMsg: string;
 
   // get redux store
-  constructor(private store: Store<ErrorAppState>) {
+  constructor(private store: Store<IErrorAppState>) {
     // subscribe for the state. Upon change updateErrorMsg will get fired.
     // @ts-ignore
-    store.select(ERROR_REDUCER).subscribe((state: ErrorAppState) => {
+    store.select(ERROR_REDUCER).subscribe((state: IErrorAppState) => {
       this.updateErrorMsg(state);
     });
   }
@@ -23,7 +23,7 @@ export class ErrorComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  updateErrorMsg(state: ErrorAppState): void {
+  updateErrorMsg(state: IErrorAppState): void {
     // check whether redux is initializing state.
     if (state !== undefined) {
       this.errorMsg = state.error;

@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 import {DatePickerState} from '../../models/DatePickerState';
 import {Store} from '@ngrx/store';
-import {TableAppState} from '../../reducers/tableReducer';
+import {ITableAppState} from '../../reducers/tableReducer';
 
 @Component({
   selector: 'app-basic-date-picker',
@@ -12,7 +12,7 @@ import {TableAppState} from '../../reducers/tableReducer';
 export class BasicDatePickerComponent implements OnInit {
   @Input() datePickerState: DatePickerState;
 
-  constructor(private store: Store<TableAppState>) {
+  constructor(private store: Store<ITableAppState>) {
   }
 
   ngOnInit(): void {

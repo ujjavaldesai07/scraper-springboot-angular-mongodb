@@ -5,7 +5,7 @@ import {Observable, throwError} from 'rxjs';
 import {IEventsResponseData} from '../models/IEventsResponseData';
 import {catchError, retry} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
-import {ErrorAppState} from '../reducers/errorReducer';
+import {IErrorAppState} from '../reducers/errorReducer';
 
 /**
  * Service to handle make events collection APIs REST calls.
@@ -17,7 +17,7 @@ import {ErrorAppState} from '../reducers/errorReducer';
 export class EventsService {
   errorMsg: string;
 
-  constructor(private store: Store<ErrorAppState>, private http: HttpClient) {
+  constructor(private store: Store<IErrorAppState>, private http: HttpClient) {
   }
 
   // handle errors
@@ -30,7 +30,7 @@ export class EventsService {
       // The response body may contain clues as to what went wrong.
       if (error.status === 0) {
         this.errorMsg = '503: Server Unreachable';
-      } else {
+      } else if (error.status !== null && error.statusText !== null) {
         this.errorMsg = `${error.status}: ${error.statusText}`;
       }
     }
@@ -57,14 +57,14 @@ export class EventsService {
   /**
    * Gets all the filter options from the backend for eg to get all unique
    * the website names, location etc.
-   * @param queryString: required parameter
+   * @param attrName: takes the filter attribute
    */
-  getAttributes(queryString: string): Observable<string[]> {
-    if (queryString === null) {
+  getAttributes(attrName: string): Observable<string[]> {
+    if (attrName === null) {
       console.error('queryString is required parameter');
     }
     return this.http
-      .get<string[]>(`${(EVENTS_ATTRIBUTES_API_ROUTE)}?attr=${queryString}`)
+      .get<string[]>(`${(EVENTS_ATTRIBUTES_API_ROUTE)}?attr=${attrName}`)
       .pipe(
         retry(2), // retry a failed request up to 2 times
         catchError(this.errorHandler) // then handle the error

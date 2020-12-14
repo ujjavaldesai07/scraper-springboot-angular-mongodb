@@ -7,12 +7,15 @@ import {DropdownOption} from './DropdownOption';
 export class DropdownState {
   private pOptions: DropdownOption[];
   private pLabel: string;
+  private pAttrName: string;
   private pActionType: string;
+  private pErrorMsg: string;
 
-  constructor(pOptions, pLabel, pActionType) {
+  constructor(pOptions, pLabel, pActionType, pAttrName) {
     this.pOptions = pOptions;
     this.pLabel = pLabel;
     this.pActionType = pActionType;
+    this.pAttrName = pAttrName;
   }
 
   get options(): DropdownOption[] {
@@ -37,5 +40,21 @@ export class DropdownState {
 
   set actionType(pActionType: string) {
     this.pActionType = pActionType;
+  }
+
+  get errorMsg(): string {
+    return this.pErrorMsg;
+  }
+
+  set errorMsg(pErrorMsg: string) {
+    this.pErrorMsg = pErrorMsg;
+  }
+
+  get attrName(): string {
+    return this.pAttrName;
+  }
+
+  set attrName(pAttrName: string) {
+    this.pAttrName = pAttrName;
   }
 }
