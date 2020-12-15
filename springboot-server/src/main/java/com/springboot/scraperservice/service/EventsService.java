@@ -7,9 +7,11 @@ import com.springboot.scraperservice.model.Events;
 
 import java.util.List;
 
-public interface DataService {
+public interface EventsService {
 
     void upsert(Object data);
 
-    Object findByParameter(Object data);
+    List<EventsDTO> findAllEventsByProperties(QueryPropertiesDTO queryPropertiesDTO);
+
+    List<String> findDistinctValuesByAttribute(String attribute);
 }

@@ -1,4 +1,4 @@
-2020-12-02 22:02:02,262 INFO org.springframework.boot.StartupInfoLogger [restartedMain] Starting ScraperServiceApplication on Ujjavals-MBP.hsd1.ca.comcast.net with PID 46367 (/Users/ujjaval/WebstormProjects/scraper/scraper-dataService/target/classes started by ujjaval in /Users/ujjaval/WebstormProjects/scraper/scraper-dataService)
+2020-12-02 22:02:02,262 INFO org.springframework.boot.StartupInfoLogger [restartedMain] Starting ScraperServiceApplication on Ujjavals-MBP.hsd1.ca.comcast.net with PID 46367 (/Users/ujjaval/WebstormProjects/scraper/scraper-eventsService/target/classes started by ujjaval in /Users/ujjaval/WebstormProjects/scraper/scraper-eventsService)
 2020-12-02 22:02:02,264 INFO org.springframework.boot.SpringApplication [restartedMain] The following profiles are active: prod
 2020-12-02 22:02:02,298 INFO org.springframework.boot.logging.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
 2020-12-02 22:02:02,298 INFO org.springframework.boot.logging.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
@@ -6,7 +6,7 @@
 2020-12-02 22:02:03,034 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 33ms. Found 1 MongoDB repository interfaces.
 2020-12-02 22:02:03,388 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain] Tomcat initialized with port(s): 8080 (http)
 2020-12-02 22:02:03,395 INFO org.apache.juli.logging.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
-2020-12-02 22:02:03,396 INFO org.apache.juli.logging.DirectJDKLog [restartedMain] Starting dataService [Tomcat]
+2020-12-02 22:02:03,396 INFO org.apache.juli.logging.DirectJDKLog [restartedMain] Starting eventsService [Tomcat]
 2020-12-02 22:02:03,396 INFO org.apache.juli.logging.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/9.0.35]
 2020-12-02 22:02:03,450 INFO org.apache.juli.logging.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
 2020-12-02 22:02:03,450 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 1151 ms
@@ -44,7 +44,7 @@
 2020-12-02 22:02:40,686 INFO com.mongodb.diagnostics.logging.SLF4JLogger [SpringContextShutdownHook] Closed connection [connectionId{localValue:7, serverValue:589642}] to cluster0-shard-00-00.cnexa.mongodb.net:27017 because the pool has been closed.
 2020-12-02 22:02:40,687 INFO com.mongodb.diagnostics.logging.SLF4JLogger [SpringContextShutdownHook] Closed connection [connectionId{localValue:1, serverValue:635854}] to cluster0-shard-00-02.cnexa.mongodb.net:27017 because the pool has been closed.
 2020-12-02 22:02:40,688 INFO com.mongodb.diagnostics.logging.SLF4JLogger [SpringContextShutdownHook] Closed connection [connectionId{localValue:8, serverValue:635854}] to cluster0-shard-00-02.cnexa.mongodb.net:27017 because the pool has been closed.
-2020-12-02 22:02:44,267 INFO org.springframework.boot.StartupInfoLogger [restartedMain] Starting ScraperServiceApplication on Ujjavals-MBP.hsd1.ca.comcast.net with PID 46390 (/Users/ujjaval/WebstormProjects/scraper/scraper-dataService/target/classes started by ujjaval in /Users/ujjaval/WebstormProjects/scraper/scraper-dataService)
+2020-12-02 22:02:44,267 INFO org.springframework.boot.StartupInfoLogger [restartedMain] Starting ScraperServiceApplication on Ujjavals-MBP.hsd1.ca.comcast.net with PID 46390 (/Users/ujjaval/WebstormProjects/scraper/scraper-eventsService/target/classes started by ujjaval in /Users/ujjaval/WebstormProjects/scraper/scraper-eventsService)
 2020-12-02 22:02:44,268 INFO org.springframework.boot.SpringApplication [restartedMain] The following profiles are active: prod
 2020-12-02 22:02:44,301 INFO org.springframework.boot.logging.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
 2020-12-02 22:02:44,301 INFO org.springframework.boot.logging.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
@@ -52,7 +52,7 @@
 2020-12-02 22:02:45,052 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 41ms. Found 1 MongoDB repository interfaces.
 2020-12-02 22:02:45,393 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain] Tomcat initialized with port(s): 8080 (http)
 2020-12-02 22:02:45,399 INFO org.apache.juli.logging.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
-2020-12-02 22:02:45,399 INFO org.apache.juli.logging.DirectJDKLog [restartedMain] Starting dataService [Tomcat]
+2020-12-02 22:02:45,399 INFO org.apache.juli.logging.DirectJDKLog [restartedMain] Starting eventsService [Tomcat]
 2020-12-02 22:02:45,399 INFO org.apache.juli.logging.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/9.0.35]
 2020-12-02 22:02:45,448 INFO org.apache.juli.logging.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
 2020-12-02 22:02:45,449 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 1147 ms
@@ -87,7 +87,7 @@
 2020-12-02 22:02:59,299 INFO com.mongodb.diagnostics.logging.SLF4JLogger [SpringContextShutdownHook] Closed connection [connectionId{localValue:7, serverValue:613263}] to cluster0-shard-00-00.cnexa.mongodb.net:27017 because the pool has been closed.
 2020-12-02 22:02:59,300 INFO com.mongodb.diagnostics.logging.SLF4JLogger [SpringContextShutdownHook] Closed connection [connectionId{localValue:1, serverValue:635854}] to cluster0-shard-00-02.cnexa.mongodb.net:27017 because the pool has been closed.
 2020-12-02 22:02:59,300 INFO com.mongodb.diagnostics.logging.SLF4JLogger [SpringContextShutdownHook] Closed connection [connectionId{localValue:8, serverValue:621133}] to cluster0-shard-00-02.cnexa.mongodb.net:27017 because the pool has been closed.
-2020-12-02 22:03:02,780 INFO org.springframework.boot.StartupInfoLogger [restartedMain] Starting ScraperServiceApplication on Ujjavals-MBP.hsd1.ca.comcast.net with PID 46393 (/Users/ujjaval/WebstormProjects/scraper/scraper-dataService/target/classes started by ujjaval in /Users/ujjaval/WebstormProjects/scraper/scraper-dataService)
+2020-12-02 22:03:02,780 INFO org.springframework.boot.StartupInfoLogger [restartedMain] Starting ScraperServiceApplication on Ujjavals-MBP.hsd1.ca.comcast.net with PID 46393 (/Users/ujjaval/WebstormProjects/scraper/scraper-eventsService/target/classes started by ujjaval in /Users/ujjaval/WebstormProjects/scraper/scraper-eventsService)
 2020-12-02 22:03:02,781 INFO org.springframework.boot.SpringApplication [restartedMain] The following profiles are active: prod
 2020-12-02 22:03:02,810 INFO org.springframework.boot.logging.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
 2020-12-02 22:03:02,810 INFO org.springframework.boot.logging.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
@@ -95,7 +95,7 @@
 2020-12-02 22:03:03,488 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 29ms. Found 1 MongoDB repository interfaces.
 2020-12-02 22:03:03,785 INFO org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain] Tomcat initialized with port(s): 8080 (http)
 2020-12-02 22:03:03,789 INFO org.apache.juli.logging.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
-2020-12-02 22:03:03,790 INFO org.apache.juli.logging.DirectJDKLog [restartedMain] Starting dataService [Tomcat]
+2020-12-02 22:03:03,790 INFO org.apache.juli.logging.DirectJDKLog [restartedMain] Starting eventsService [Tomcat]
 2020-12-02 22:03:03,790 INFO org.apache.juli.logging.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/9.0.35]
 2020-12-02 22:03:03,831 INFO org.apache.juli.logging.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
 2020-12-02 22:03:03,831 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 1021 ms

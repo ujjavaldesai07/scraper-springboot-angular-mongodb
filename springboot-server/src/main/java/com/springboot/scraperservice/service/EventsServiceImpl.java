@@ -3,7 +3,6 @@ package com.springboot.scraperservice.service;
 import com.springboot.scraperservice.constants.Constants;
 import com.springboot.scraperservice.dto.EventsDTO;
 import com.springboot.scraperservice.dto.QueryPropertiesDTO;
-import com.springboot.scraperservice.exceptions.http.BadRequestException;
 import com.springboot.scraperservice.helper.DateConversion;
 import com.springboot.scraperservice.model.Events;
 import com.springboot.scraperservice.repository.EventsRepository;
@@ -16,18 +15,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Service
-public class EventsDataService implements DataService {
-    private final static Logger LOGGER = Logger.getLogger(String.valueOf(EventsDataService.class));
+public class EventsServiceImpl implements EventsService {
+    private final static Logger LOGGER = Logger.getLogger(String.valueOf(EventsServiceImpl.class));
 
     private final MongoTemplate mongoTemplate;
     private final EventsRepository eventsRepository;
 
     @Autowired
-    public EventsDataService(MongoTemplate mongoTemplate, EventsRepository eventsRepository) {
+    public EventsServiceImpl(MongoTemplate mongoTemplate, EventsRepository eventsRepository) {
         this.mongoTemplate = mongoTemplate;
         this.eventsRepository = eventsRepository;
     }
@@ -39,7 +37,7 @@ public class EventsDataService implements DataService {
      * @param queryPropertiesDTO: All the query parameters is hold by this DTO
      * @return : List of events
      */
-    public List<EventsDTO> findAllByProperties(QueryPropertiesDTO queryPropertiesDTO) {
+    public List<EventsDTO> findAllEventsByProperties(QueryPropertiesDTO queryPropertiesDTO) {
         List<Events> queriedEventList = this.eventsRepository.findAllByProperties(queryPropertiesDTO);
 
         List<EventsDTO> eventsDTOList = new LinkedList<>();
@@ -66,15 +64,7 @@ public class EventsDataService implements DataService {
      * @param data: Takes event object to add in the collection.
      */
     public void upsert(Object data) {
-        Events event;
-
-        if (data instanceof Events) {
-            event = (Events) data;
-        } else {
-            LOGGER.log(Level.SEVERE,
-                    "Unable to cast to Events type. Reason: Wrong service is used for this operation.");
-            return;
-        }
+        Events event = (Events) data;;
 
         // find the event by title which will be unique
         Query query = new Query();
@@ -92,16 +82,13 @@ public class EventsDataService implements DataService {
         mongoTemplate.upsert(query, update, Events.class);
     }
 
-    public Object findByParameter(Object data) {
-
-        if (data instanceof QueryPropertiesDTO) {
-            return findAllByProperties((QueryPropertiesDTO) data);
-        } else if (data instanceof String) {
-            return eventsRepository.findDistinctByAttributes((String) data);
-        } else {
-            LOGGER.log(Level.SEVERE,
-                    "Unable to cast to supported types. Reason: Wrong service is used for this operation.");
-            throw new BadRequestException("Unsupported query parameters found.");
-        }
+    /**
+     * This function find the distinct values of an Events attribute.
+     * for eg. website, location etc.
+     * @param attribute: name of the Events attribute
+     * @return: list of strings
+     */
+    public List<String> findDistinctValuesByAttribute(String attribute) {
+        return eventsRepository.findDistinctValuesByAttributes(attribute);
     }
 }

@@ -2,6 +2,7 @@ package com.springboot.scraperservice.service;
 
 import com.springboot.scraperservice.ScraperServiceApplication;
 import com.springboot.scraperservice.constants.Constants;
+import com.springboot.scraperservice.dto.EventsDTO;
 import com.springboot.scraperservice.dto.QueryPropertiesDTO;
 import com.springboot.scraperservice.model.Events;
 import org.junit.runner.RunWith;
@@ -18,15 +19,15 @@ import java.util.logging.Logger;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = ScraperServiceApplication.class, loader = AnnotationConfigContextLoader.class)
-public class EventDataServiceTest {
-    private final static Logger LOGGER = Logger.getLogger(String.valueOf(EventDataServiceTest.class));
+public class EventEventsServiceTest {
+    private final static Logger LOGGER = Logger.getLogger(String.valueOf(EventEventsServiceTest.class));
 
     @Autowired
-    private DataService dataService;
+    private EventsService eventsService;
 
     @Test
     public void testFindAllByPropertiesSuccessCase() {
-        List<String> websiteList = (List<String>) dataService.findByParameter(Constants.EVENTS_WEBSITE);
+        List<String> websiteList = eventsService.findDistinctValuesByAttribute(Constants.EVENTS_WEBSITE);
         String[] actual = new String[websiteList.size()];
         actual = websiteList.toArray(actual);
         String[] expected = {"ComputerWorld", "Techmeme"};
@@ -35,7 +36,7 @@ public class EventDataServiceTest {
 
     @Test
     public void testFindAllByPropertiesFailureCase() {
-        List<String> websiteList = (List<String>) dataService.findByParameter(Constants.EVENTS_WEBSITE);
+        List<String> websiteList = eventsService.findDistinctValuesByAttribute(Constants.EVENTS_WEBSITE);
         String[] actual = new String[websiteList.size()];
         actual = websiteList.toArray(actual);
         String[] expected = {"fake website", "fake website 2"};
@@ -44,13 +45,13 @@ public class EventDataServiceTest {
 
     @Test
     public void testFindAllEventsWithoutProperties() {
-        List<Events> eventsList = (List<Events>) dataService.findByParameter(new QueryPropertiesDTO());
+        List<EventsDTO> eventsList = eventsService.findAllEventsByProperties(new QueryPropertiesDTO());
         assertNotEquals(0, eventsList.size());
     }
 
     @Test
     public void testFindLocationByProperties() {
-        List<String> locationList = (List<String>) dataService.findByParameter(Constants.EVENTS_LOCATION);
+        List<String> locationList = eventsService.findDistinctValuesByAttribute(Constants.EVENTS_LOCATION);
         assertTrue(locationList.contains("Amsterdam"));
     }
 }

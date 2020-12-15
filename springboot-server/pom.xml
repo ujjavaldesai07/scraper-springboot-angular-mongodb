@@ -12,7 +12,7 @@
 	<artifactId>scraper-data-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>scraper-data-service</name>
-	<description>Backend dataService for managing scraper data.</description>
+	<description>Backend service which does web scraping and provides restful services for scraper data.</description>
 
 	<properties>
 		<java.version>11</java.version>

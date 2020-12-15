@@ -1,9 +1,9 @@
 package com.springboot.scraperservice.controller;
 
 import com.springboot.scraperservice.constants.Routes;
+import com.springboot.scraperservice.dto.EventsDTO;
 import com.springboot.scraperservice.dto.QueryPropertiesDTO;
-import com.springboot.scraperservice.model.Events;
-import com.springboot.scraperservice.service.DataService;
+import com.springboot.scraperservice.service.EventsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +18,11 @@ import java.util.List;
 @RequestMapping(Routes.EVENT_API)
 public class EventsController {
 
-    private final DataService dataService;
+    private final EventsService eventsService;
 
     @Autowired
-    public EventsController(DataService dataService) {
-        this.dataService = dataService;
+    public EventsController(EventsService eventsService) {
+        this.eventsService = eventsService;
     }
 
     /**
@@ -58,9 +58,9 @@ public class EventsController {
         queryPropertiesDTO.setSort(sort);
 
         // if result is null then send response as Not Found.
-        Object result = dataService.findByParameter(queryPropertiesDTO);
+        List<EventsDTO> result = eventsService.findAllEventsByProperties(queryPropertiesDTO);
         if (result != null) {
-            return ResponseEntity.ok((List<Events>) result);
+            return ResponseEntity.ok(result);
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -76,9 +76,9 @@ public class EventsController {
     public ResponseEntity<?> getWebsiteNames(@RequestParam(required = false) String attr) {
 
         // if result is null then send response as Not Found.
-        Object result = dataService.findByParameter(attr);
+        List<String> result = eventsService.findDistinctValuesByAttribute(attr);
         if (result != null) {
-            return ResponseEntity.ok((List<String>) result);
+            return ResponseEntity.ok(result);
         } else {
             return ResponseEntity.notFound().build();
         }

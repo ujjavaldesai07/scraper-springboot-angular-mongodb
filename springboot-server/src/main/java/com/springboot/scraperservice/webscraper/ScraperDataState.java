@@ -1,6 +1,5 @@
 package com.springboot.scraperservice.webscraper;
 
-import com.springboot.scraperservice.service.DataService;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Component;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * This class maintains the state of the Scraper Data for any type of collection.

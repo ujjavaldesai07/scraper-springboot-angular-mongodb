@@ -12,5 +12,5 @@ import java.util.List;
 
 public interface EventsRepository extends MongoRepository<Events, String> {
     List<Events> findAllByProperties(QueryPropertiesDTO queryPropertiesDTO);
-    List<String> findDistinctByAttributes(String attribute);
+    List<String> findDistinctValuesByAttributes(String attribute);
 }

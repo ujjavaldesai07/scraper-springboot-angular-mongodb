@@ -75,7 +75,7 @@ public class EventsRepositoryImpl {
         return null;
     }
 
-    public List<String> findDistinctByAttributes(String attribute) {
+    public List<String> findDistinctValuesByAttributes(String attribute) {
         final Query query = new Query();
         query.addCriteria(Criteria.where(attribute).ne(null));
 

@@ -3,9 +3,9 @@ import {DropdownState} from '../../models/DropdownState';
 import {MatSelectChange} from '@angular/material/select';
 import {Store} from '@ngrx/store';
 import {ITableAppState} from '../../reducers/tableReducer';
-import {DropdownOption} from "../../models/DropdownOption";
-import {EventsService} from "../../services/events.service";
-import {SET_ERROR_INFO} from "../../actions/types";
+import {DropdownOption} from '../../models/DropdownOption';
+import {EventsService} from '../../services/events.service';
+import {SET_ERROR_INFO} from '../../actions/types';
 
 @Component({
   selector: 'app-basic-drop-down',
