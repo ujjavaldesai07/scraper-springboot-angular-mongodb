@@ -50,7 +50,12 @@ export class TableComponent implements OnInit {
         this.checkIfDataIsEmpty();
       },
       // upon error dispatch the error msg to errorReducer
-      error => this.store.dispatch({type: SET_ERROR_INFO, payload: {error}}));
+      error => {
+        // if error found then set the datasource to empty array
+        // so that only the error msg is displayed.
+        this.dataSource = [];
+        this.store.dispatch({type: SET_ERROR_INFO, payload: {error}});
+      });
   }
 
   /**

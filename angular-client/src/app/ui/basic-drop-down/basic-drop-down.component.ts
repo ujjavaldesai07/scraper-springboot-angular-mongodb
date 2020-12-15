@@ -5,6 +5,7 @@ import {Store} from '@ngrx/store';
 import {ITableAppState} from '../../reducers/tableReducer';
 import {DropdownOption} from "../../models/DropdownOption";
 import {EventsService} from "../../services/events.service";
+import {SET_ERROR_INFO} from "../../actions/types";
 
 @Component({
   selector: 'app-basic-drop-down',
@@ -27,7 +28,13 @@ export class BasicDropDownComponent implements OnInit {
       this.eventsService.getAttributes(this.dropdownState.attrName).subscribe(data => {
           data.forEach(item => this.dropdownState.options.push(new DropdownOption(item, item)));
         },
-        error => this.dropdownState.errorMsg = error);
+        error => {
+          // if unable to fetch the data then set the empty DropdownOption
+          // so that the loading progress is not displayed.
+          this.dropdownState.options.push(new DropdownOption('', ''));
+          this.dropdownState.errorMsg = error;
+          this.store.dispatch({type: SET_ERROR_INFO, payload: {error}});
+        });
     }
   }
 
