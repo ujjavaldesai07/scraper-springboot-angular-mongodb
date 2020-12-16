@@ -4,7 +4,6 @@ import com.springboot.scraperservice.ScraperServiceApplication;
 import com.springboot.scraperservice.constants.Constants;
 import com.springboot.scraperservice.dto.EventsDTO;
 import com.springboot.scraperservice.dto.QueryPropertiesDTO;
-import com.springboot.scraperservice.model.Events;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -19,8 +18,8 @@ import java.util.logging.Logger;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = ScraperServiceApplication.class, loader = AnnotationConfigContextLoader.class)
-public class EventEventsServiceTest {
-    private final static Logger LOGGER = Logger.getLogger(String.valueOf(EventEventsServiceTest.class));
+public class EventsServiceTest {
+    private final static Logger LOGGER = Logger.getLogger(String.valueOf(EventsServiceTest.class));
 
     @Autowired
     private EventsService eventsService;
